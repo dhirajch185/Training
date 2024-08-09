@@ -10,3 +10,13 @@ free (how much ram is still free)
 
 sudo su - ( switch to root user)
 
+./ MyshellScript.sh | more (to execute my shell scripts and read in a better format)
+
+cron    (cron job to schedule the report to check running instances)
+
+scp -i /home/dhiraj/Downloads/aws_login.pem /home/dhiraj/Downloads/aws_login.pem ubuntu@XXAWS PUblic IP AddressXX:/home/ubuntu ( copy files from local machine to aws instance securely)
+
+scp -i /home/dhiraj/Downloads/aws_login.pem /home/dhiraj/scripts/aws_resource_tracker.sh ubuntu@XXAWS PUblic IP AddressXX:/home/ubuntu
+
+aws ec2 describe-instances | jq '.Reservations[].Instances[].InstanceId' (List of instance ids parsed from json response of aws cli.) similary ! yq can be used for parsing data from yaml
+
