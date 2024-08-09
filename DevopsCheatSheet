@@ -5,6 +5,11 @@ ctrl+shift+c for copying text on ubutnu terminal
 ctrl+shift+v for pasting it :)
 
 chmod 777 filename.sh  (To grant execute execute execute permissions for admin, group and user)
+
+
+sudo poweroff (to shutdown the machine)
+
+sudo reboot (to restart the machine)
 ----------------- shell commands I normally use -----------------
 
 ls -ltr -> List the files
