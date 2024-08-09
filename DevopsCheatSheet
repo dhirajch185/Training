@@ -1,0 +1,12 @@
+----------------- shell commands I normally use -----------------
+
+ls -ltr -> List the files
+
+ps -ef | grep "amazon" (amazon process running on my instance)
+
+top ( cpu and memory metrics)
+
+free (how much ram is still free)
+
+sudo su - ( switch to root user)
+
