@@ -1,3 +1,10 @@
+--------------- Ubuntu basics for trainees -------------
+
+ctrl+shift+c for copying text on ubutnu terminal
+
+ctrl+shift+v for pasting it :)
+
+chmod 777 filename.sh  (To grant execute execute execute permissions for admin, group and user)
 ----------------- shell commands I normally use -----------------
 
 ls -ltr -> List the files
