@@ -27,3 +27,43 @@ scp -i /home/dhiraj/Downloads/aws_login.pem /home/dhiraj/scripts/aws_resource_tr
 
 aws ec2 describe-instances | jq '.Reservations[].Instances[].InstanceId' (List of instance ids parsed from json response of aws cli.) similary ! yq can be used for parsing data from yaml
 
+--------------------------------- shell script -----------------
+
+!/bin/bash
+
+
+#########################
+#Author: Dhiraj
+#Date: XXXXXX 2024
+
+#version: 1
+
+# This scripts records aws instance's resource usage
+
+#########################
+
+set -x
+set -e #exit on error - error handling
+set -o # exit on error before - pipefail
+
+
+# AWS S3
+# AWS Lambda
+# AWS Ec2
+# AWS IAM users list
+
+# list s3 buckets on aws
+echo "print list of s3 buckets"
+aws s3 ls
+
+# list EC2 instances
+echo "print list of ec2 buckets"
+aws ec2 describe-instances | jq '.Reservations[].Instances[].InstanceId'
+
+# list lambda
+echo "print list of lambda functions"
+aws lambda list-functions
+
+# list iam users
+echo "print list of iam users"
+aws iam list-users
