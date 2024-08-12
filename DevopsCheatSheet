@@ -74,6 +74,11 @@ echo "print list of iam users"
 aws iam list-users
 
 ----
+git init
+git add
+git commit -m "message for your commit action"
+
+
 git log filename.sh (gives you the log of commits done for the file)
 
 git reset --hard commitid (commitID is from the git log from above command  -resets the file to thee commit version as per your command)
