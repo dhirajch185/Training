@@ -239,6 +239,184 @@ Once this completes the pause pods will be running:
 kubectl get pods -n other
 
 
+--------------------
+prepare-environment autoscaling/compute/karpenter
+
+
+Karpenter's goal is to improve the efficiency and cost of running workloads on Kubernetes clusters. Karpenter works by:
+
+Watching for pods that the Kubernetes scheduler has marked as unschedulable
+Evaluating scheduling constraints (resource requests, node selectors, affinities, tolerations, and topology spread constraints) requested by the pods
+Provisioning nodes that meet the requirements of the pods
+Scheduling the pods to run on the new nodes
+Removing the nodes when the nodes are no longer needed
+
+
+The first thing we'll do is install Karpenter in our cluster. Various pre-requisites were created during the lab preparation stage, including:
+
+An IAM role for Karpenter to call AWS APIs
+An IAM role and instance profile for the EC2 instances that Karpenter creates
+An EKS cluster access entry for the node IAM role so the nodes can join the EKS cluster
+An SQS queue for Karpenter to receive Spot interruption, instance re-balance and other events
+
+
+helm upgrade --install karpenter oci://public.ecr.aws/karpenter/karpenter \
+  --version "${KARPENTER_VERSION}" \
+  --namespace "karpenter" --create-namespace \
+  --set "settings.clusterName=${EKS_CLUSTER_NAME}" \
+  --set "settings.interruptionQueue=${KARPENTER_SQS_QUEUE}" \
+  --set controller.resources.requests.cpu=1 \
+  --set controller.resources.requests.memory=1Gi \
+  --set controller.resources.limits.cpu=1 \
+  --set controller.resources.limits.memory=1Gi \
+  --set replicas=1 \
+  --wait
+
+Karpenter will be running as a deployment in the karpenter namespace:
+
+kubectl get deployment -n karpenter
+
+Karpenter configuration comes in the form of a NodePool CRD (Custom Resource Definition). A single Karpenter NodePool is capable of handling many different pod shapes. Karpenter makes scheduling and provisioning decisions based on pod attributes such as labels and affinity. A cluster may have more than one NodePool, but for the moment we'll declare a default one.
+
+One of the main objectives of Karpenter is to simplify the management of capacity. If you're familiar with other auto scaling solutions, you may have noticed that Karpenter takes a different approach, referred to as group-less auto scaling. Other solutions have traditionally used the concept of a node group as the element of control that defines the characteristics of the capacity provided (i.e: On-Demand, EC2 Spot, GPU Nodes, etc) and that controls the desired scale of the group in the cluster. In AWS the implementation of a node group matches with Auto Scaling groups. Karpenter allows us to avoid complexity that arises from managing multiple types of applications with different compute needs.
+
+We'll start by applying some custom resources used by Karpenter. First we'll create a NodePool that defines our general capacity requirements:
+
+~/environment/eks-workshop/modules/autoscaling/compute/karpenter/nodepool/nodepool.yaml
+
+We're asking the NodePool to start all new nodes with a Kubernetes label type: karpenter, which will allow us to specifically target Karpenter nodes with pods for demonstration purposes
+
+B
+The NodePool CRD supports defining node properties like instance type and zone. In this example, we're setting the karpenter.sh/capacity-type to initially limit Karpenter to provisioning On-Demand instances, as well as node.kubernetes.io/instance-type to limit to a subset of specific instance types. You can learn which other properties are available here. We'll work on a few more during the workshop.
+
+C
+A NodePool can define a limit on the amount of CPU and memory managed by it. Once this limit is reached Karpenter will not provision additional capacity associated with that particular NodePool, providing a cap on the total compute.
+
+And we'll also need an EC2NodeClass which provides the specific configuration that applies to AWS:
+
+~/environment/eks-workshop/modules/autoscaling/compute/karpenter/nodepool/nodeclass.yaml
+
+The subnetSelectorTerms can be used to look up the subnets where Karpenter should launch the EC2 instances. These tags were automatically set on the associated AWS infrastructure provided for the workshop. securityGroupSelectorTerms accomplishes the same function for the security group that will be attached to the EC2 instances.
+
+B
+We define a set of tags that will be applied to EC2 instances created which enables accounting and governance.
+
+We've now provided Karpenter with the basic requirements in needs to start provisioning capacity for our cluster.
+
+Apply the NodePool and EC2NodeClass with the following command:
+
+
+kubectl kustomize ~/environment/eks-workshop/modules/autoscaling/compute/karpenter/nodepool \
+  | envsubst | kubectl apply -f-
+
+
+Throughout the workshop you can inspect the Karpenter logs with the following command to understand its behavior:
+
+
+kubectl logs -l app.kubernetes.io/instance=karpenter -n karpenter | jq '.'
+
+You'll notice in this example we're using the image:
+
+public.ecr.aws/eks-distro/kubernetes/pause
+
+This is a small container that will consume no real resources and starts quickly, which makes it great for demonstrating scaling scenarios. We'll be using this for many of the examples in this particular lab.
+
+
+kubectl apply -k ~/environment/eks-workshop/modules/autoscaling/compute/karpenter/scale
+
+
+Now let's deliberately scale this deployment to demonstrate that Karpenter is making optimized decisions. Since we've requested 1Gi of memory, if we scale the deployment to 5 replicas that will request a total of 5Gi of memory.
+
+Before we proceed, what instance from the table above do you think Karpenter will end up provisioning? Which instance type would you want it to?
+
+
+kubectl scale -n other deployment/inflate --replicas 5
+
+
+Because this operation is creating one or more new EC2 instances it will take a while, you can use kubectl to wait until its done with this command:
+
+kubectl rollout status -n other deployment/inflate --timeout=180s
+
+
+Once all of the Pods are running, lets see what instance type it selecting:
+
+
+kubectl logs -l app.kubernetes.io/instance=karpenter -n karpenter | grep 'launched nodeclaim' | jq '.'
+
+The pods that we scheduled will fit nicely in to an EC2 instance with 8GB of memory, and since Karpenter will always prioritize the lowest price instance type for on-demand instances, it will select m5.large.
+
+info
+There are certain cases where a different instance type might be selected other than the lowest price, for example if that cheapest instance type has no remaining capacity available in the region you're working in
+
+We can also check the metadata added to the node by Karpenter:
+
+
+kubectl get node -l type=karpenter -o jsonpath='{.items[0].metadata.labels}' | jq '.'
+
+
+This simple examples illustrates the fact that Karpenter can dynamically select the right instance type based on the resource requirements of the workloads that require compute capacity. This differs fundamentally from a model oriented around node pools, such as Cluster Autoscaler, where the instance types within a single node group must have consistent CPU and memory characteristics.
+
+
+Karpenter automatically discovers nodes that are eligible for disruption and spins up replacements when needed. This can happen for three different reasons:
+
+Expiration: By default, Karpenter automatically expires instances after 720h (30 days), forcing a recycle allowing nodes to be kept up to date.
+Drift: Karpenter detects changes in configuration (such as the NodePool or EC2NodeClass) to apply necessary changes
+Consolidation: A critical feature for operating compute in a cost-effective manner, Karpenter will optimize our cluster's compute on an on-going basis. For example, if workloads are running on under-utilized compute instances, it will consolidate them to fewer instances.
+Disruption is configured through the disruption block in a NodePool. You can see highlighted below the policy thats already configured in our NodePool.
+
+~/environment/eks-workshop/modules/autoscaling/compute/karpenter/nodepool/nodepool.yaml
+
+The consolidationPolicy can also be set to WhenEmpty, which restricts disruption only to nodes that contain no workload pods. Learn more about Disruption on the Karpenter docs.
+
+Scaling out infrastructure is only one side of the equation for operating compute infrastructure in a cost-effective manner. We also need to be able to optimize on an on-going basis such that, for example, workloads running on under-utilized compute instances are compacted to fewer instances. This improves the overall efficiency of how we run workloads on the compute, resulting in less overhead and lower costs.
+
+Let's explore how to trigger automatic consolidation when disruption is set to consolidationPolicy: WhenUnderutilized:
+
+Scale the inflate workload from 5 to 12 replicas, triggering Karpenter to provision additional capacity
+Scale down the workload back down to 5 replicas
+Observe Karpenter consolidating the compute
+Scale our inflate workload again to consume more resources:
+
+
+kubectl scale -n other deployment/inflate --replicas 12
+kubectl rollout status -n other deployment/inflate --timeout=180s
+
+This changes the total memory request for this deployment to around 12Gi, which when adjusted to account for the roughly 600Mi reserved for the kubelet on each node means that this will fit on 2 instances of type m5.large:
+
+
+kubectl get nodes -l type=karpenter --label-columns node.kubernetes.io/instance-type
+
+Next, scale the number of replicas back down to 5:
+
+
+kubectl scale -n other deployment/inflate --replicas 5
+
+We can check the Karpenter logs to get an idea of what actions it took in response to our scaling in the deployment. Wait about 5-10 seconds before running the following command:
+
+
+kubectl logs -l app.kubernetes.io/instance=karpenter -n karpenter | grep 'consolidation delete' | jq '.'
+
+
+This will result in the Kubernetes scheduler placing any pods on those nodes on the remaining capacity, and now we can see that Karpenter is managing a total of 1 node:
+
+
+kubectl get nodes -l type=karpenter
+
+
+Karpenter can also further consolidate if a node can be replaced with a cheaper variant in response to workload changes. This can be demonstrated by scaling the inflate deployment replicas down to 1, with a total memory request of around 1Gi:
+
+
+kubectl scale -n other deployment/inflate --replicas 1
+
+
+
+kubectl logs -l app.kubernetes.io/instance=karpenter -n karpenter -f | jq '.'
+
+The previous command includes the flag "-f" for follow, allowing us to watch the logs as they happen. Consolidation to a smaller node takes less than one minute. Watch the logs to how the Karpenter controller behaves.
+
+
+kubectl get nodes -l type=karpenter -o jsonpath="{range .items[*]}{.metadata.labels.node\.kubernetes\.io/instance-type}{'\n'}{end}"
+
 
 
 
