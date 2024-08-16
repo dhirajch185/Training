@@ -419,4 +419,16 @@ kubectl get nodes -l type=karpenter -o jsonpath="{range .items[*]}{.metadata.lab
 
 
 
+Uninstall StormForge Agent and Applier
+To uninstall the StormForge Applier, run the following command:
+
+helm uninstall stormforge-applier -n stormforge-system
+To uninstall the StormForge Agent, run the following command:
+
+helm uninstall stormforge-agent -n stormforge-system
+Uninstall the StormForge Sample App
+To uninstall the StormForge Sample App, run the following command:
+
+helm uninstall optlive-showcase-app -n default
+
 
