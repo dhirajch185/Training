@@ -4,6 +4,8 @@ ctrl+shift+c for copying text on ubutnu terminal
 
 ctrl+shift+v for pasting it :)
 
+to delete entire line, just press dd at the beginning of the line.
+
 chmod 777 filename.sh  (To grant execute execute execute permissions for admin, group and user)
 
 
@@ -438,3 +440,4 @@ ssh-keygen (this commmand in a linux terminal will create the files --> id_rsa  
 -> in these files id_rsa.pub is the public key which can be shared to make passwordless authentication to the target server at anytime. if the public key is added to the target server's authorized_keys file.
 
 authorized_keys file should be in .ssh folder. Navigate using the command (ls ~/.ssh/)
+
