@@ -441,3 +441,39 @@ ssh-keygen (this commmand in a linux terminal will create the files --> id_rsa  
 
 authorized_keys file should be in .ssh folder. Navigate using the command (ls ~/.ssh/)
 
+---------------------------------------------------
+
+Ansible examples
+
+Modules
+https://docs.ansible.com/ansible/latest/collections/ansible/builtin/find_module.html#ansible-collections-ansible-builtin-find-module
+
+using the file module in 'ansible adhoc' mode
+
+example: dhiraj@dhiraj-VirtualMachine:~$  ansible localhost -m find -a "path=Downloads file_type=file"
+
+-----------
+
+first.yaml file contents
+
+---
+- name: My First Playbook
+  hosts: localhost
+  become: true
+  become_user: root
+
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+
+  tasks:
+  - name: Test reachability task
+    ping:
+
+  - name: Find files
+    ansible.builtin.find:
+      paths: /home/dhiraj/Downloads
+      recurse: yes
+      file_type: file
+
+Executed the yaml file successfully using ansible-playbook using --->> dhiraj@dhiraj-VirtualMachine:~/Downloads$ sudo ansible-playbook first.yaml -v
+
