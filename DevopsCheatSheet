@@ -445,6 +445,9 @@ authorized_keys file should be in .ssh folder. Navigate using the command (ls ~/
 
 Ansible examples
 
+ansible uses ssh to connect to the host and push the commands using the modules. Remember you cant 
+
+
 Modules
 https://docs.ansible.com/ansible/latest/collections/ansible/builtin/find_module.html#ansible-collections-ansible-builtin-find-module
 
