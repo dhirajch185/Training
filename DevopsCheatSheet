@@ -24,6 +24,13 @@ free (how much ram is still free)
 
 sudo su - ( switch to root user)
 
+usermod -aG docker jenkins
+usermod -aG docker ubuntu (add users 'jenkins' and 'ubuntu' to docker)
+
+to logout of the user use ---> Ctrl + D
+
+
+
 ./ MyshellScript.sh | more (to execute my shell scripts and read in a better format)
 
 cron    (cron job to schedule the report to check running instances)
