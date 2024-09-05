@@ -4,7 +4,12 @@ docker ps --all (lists all containers which docker knows)
 
 docker logs conatinername/ID (logs for troubleshooting applications) tip-- first few characters of the container ID should still show the container
 
-without logs command, we can use another way like - docker container start --attach containerID (will attach a terminal to the container container to show the logs)
+without logs command, we can use another way like - "docker container start --attach containerID" (will attach a terminal to the container container to show the logs)
 
+docker run hello-world:linux ( creates a container from 'hello-world' image, stated it and attached terminal to show log)
 
+docker run = docker container create + docker container start + docker container attach
 
+Exit Code =0 means the the container created with the correct entrypoint.
+
+docker rm containerID (delete the container)
