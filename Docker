@@ -1,0 +1,10 @@
+docker ps (list containers which are actively running)
+
+docker ps --all (lists all containers which docker knows)
+
+docker logs conatinername/ID (logs for troubleshooting applications) tip-- first few characters of the container ID should still show the container
+
+without logs command, we can use another way like - docker container start --attach containerID (will attach a terminal to the container container to show the logs)
+
+
+
