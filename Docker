@@ -1,3 +1,25 @@
+Docker images are layers of images compressed together.
+
+--------------------------------------------------
+
+To create the docker group and add your user:
+
+Create the docker group.
+
+
+ sudo groupadd docker
+
+Add your user to the docker group.
+
+
+ sudo usermod -aG docker $USER
+
+remember to reboot the machine for it to work (in terminal just use 'sudo reboot' :)
+
+-----------------------------------------------------
+
+
+
 docker ps (list containers which are actively running)
 
 docker ps --all (lists all containers which docker knows)
@@ -13,3 +35,36 @@ docker run = docker container create + docker container start + docker container
 Exit Code =0 means the the container created with the correct entrypoint.
 
 docker rm containerID (delete the container)
+
+docker run -d containerid (will run the docker in 'detached' mode. so if the application hangs or keeps running, you are not stuck in the interactive terminal forver)
+
+------------Build own docker images and push it to dockerhub.--------------
+Example Dockerfile is like below.
+
+
+FROM ubuntu       (dockr Image from which your image will be buiilt based of) 
+
+LABEL maintainer="Carlos Nunez <dev@carlosnunez.me>"  (To provide details of the maintainer of the image)
+
+USER root                      (to mention docker which user will execute the commands under this line here its root user)
+
+COPY ./entrypoint.bash /           (copies files from a directory provided, to the Docker build command to the container image.)
+
+RUN apt -y update                  (Run statements are commands that customize our image. )
+RUN apt -y install curl bash         (This is a great place to install additional software or configure files needed by your application. Since our example script needs "Curl" and "Bash" to run, this Docker file uses run commands to install those programs. )
+RUN chmod 755 /entrypoint.bash
+
+USER nobody (Here we're using the user command to set the default users for containers created from this image to the powerless "nobody" user. This ensures that we can't break out of the container and potentially change important files on our host.)
+
+ENTRYPOINT [ "/entrypoint.bash"  (The entry point tells Docker what command containers created from this image should run. You can also use the CMD command to do this, though there are differences. )
+
+
+------------------------------------------------------------------------------------------------------------------
+
+Just like containers, every docker image will have an ID.
+
+docker build -t Our-first-imagename --file Dockerfile path/to/files_included_into_dockerImage
+
+docker run Our-first-imagename (to run our custom created image)
+
+---------------------------------------------------------------------------------------------------------------------
