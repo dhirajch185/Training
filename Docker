@@ -26,6 +26,10 @@ docker ps (list containers which are actively running)
 
 docker ps --all (lists all containers which docker knows)
 
+docker ps -aq (lists all the containers ids)
+
+
+
 docker logs conatinername/ID (logs for troubleshooting applications) tip-- first few characters of the container ID should still show the container
 
 without logs command, we can use another way like - "docker container start --attach containerID" (will attach a terminal to the container container to show the logs)
@@ -38,7 +42,15 @@ Exit Code =0 means the the container created with the correct entrypoint.
 
 docker rm containerID (delete the container)
 
+docker rm -aq | xargs docker rm  (pulls the list of container ids from the left and feed it to docker rm on the right using linux xargs command)
+
 docker run -d containerid (will run the docker in 'detached' mode. That means no terminal to check logs is attached to the container. so if the application hangs or keeps running, you are not stuck in the interactive terminal forver)
+
+docker stop containerID (should stop the container after trying to gracefully stop the application first)
+
+docker stop -t 0 ContainerID (Forcefully stop the container and the application. This might cause data loss of the application)  
+
+
 
 ------------Build own docker images and push it to dockerhub.--------------
 Example Dockerfile is like below.
