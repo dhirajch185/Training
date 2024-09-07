@@ -16,6 +16,8 @@ Add your user to the docker group.
 
 remember to reboot the machine for it to work (in terminal just use 'sudo reboot' :)
 
+to check if the user is added to the docker group just run 'groups your_linux_username'
+
 -----------------------------------------------------
 
 
@@ -36,7 +38,7 @@ Exit Code =0 means the the container created with the correct entrypoint.
 
 docker rm containerID (delete the container)
 
-docker run -d containerid (will run the docker in 'detached' mode. so if the application hangs or keeps running, you are not stuck in the interactive terminal forver)
+docker run -d containerid (will run the docker in 'detached' mode. That means no terminal to check logs is attached to the container. so if the application hangs or keeps running, you are not stuck in the interactive terminal forver)
 
 ------------Build own docker images and push it to dockerhub.--------------
 Example Dockerfile is like below.
@@ -67,4 +69,16 @@ docker build -t Our-first-imagename --file Dockerfile path/to/files_included_int
 
 docker run Our-first-imagename (to run our custom created image)
 
+
+docker images (list all the images created)
+
+docker rmi image_name (to delete the created image)
+
+
 ---------------------------------------------------------------------------------------------------------------------
+We can run 'docker exec container_ID ShellCommand_like_date' to execute commands on the container using CLI
+
+You can even use exec to start terminal sessions within the container. This can be really helpful while troubleshooting. Let's say that we wanted to use a bash cell within the container to do this. Since we're going to be entering keystrokes, we need to tell exec that this command needs to be interactive. Additionally, since we're starting a shell, we'll also need to tell Docker that we'll need something called a quote, unquote, sudo TTY, so that our terminal can properly interact with the container's terminal. We can use the dash dash interactive and dash dash TTY options respectively to enable both of those modes. So, putting that all together, the command I'm going to run is docker exec dash dash interactive dash dash TTY, then the ID for the container, or D 9 0 D, like we saw earlier, and then finally, the shell that I want to use, or bash in this case. Once I hit enter, I'm greeted with a prompt and can run additional commands, which is very exciting. Since I'm done here, I'm going to press Control D to exit out of the shell, but be really careful here. Pressing this keystroke too many times will log you out of your real terminal.
+
+
+docker exec --interactive --tty container_ID bash
