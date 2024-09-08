@@ -50,7 +50,10 @@ docker stop containerID (should stop the container after trying to gracefully st
 
 docker stop -t 0 ContainerID (Forcefully stop the container and the application. This might cause data loss of the application)  
 
+docker run -d --name naming-this-container image-name   (creating a container from the image and naming it) 
 
+docker run -d --name naming-this-container -p outsidePortNumber:insidePortnumber image-name (binds a port of container which is 'insidePortNumber' to the machines's 'outsideportnumber)
+Example:  docker run -d --name our-web-servercontainer -p 5001:5000 our-web-server
 
 ------------Build own docker images and push it to dockerhub.--------------
 Example Dockerfile is like below.
