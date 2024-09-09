@@ -41,4 +41,31 @@ One step further would be results should be through chats like slack or some oth
 
 Education:
 Dev team need to know secuirty basics.
-Ensure 
+Goal is to make security team being the auditor but not tester.
+
+Shift Security to the Left-
+Move vulnerability scanning, Static/dynamic scans, interactive scans to Development phase where code review and Architectural review happens.
+Enable dev team to own the security testing and own thier own security.
+Security team need to provide Dev team with a framework - What tests need to run? Static/dynamic/interactive. what are critical/high..
+Tell dev what tools to use.
+
+Sec team should provide the expertise. Partner with dev team. 
+Devops team is responsible for app security testing, Security team is accountable as auditors.
+
+DevSecOps & Cloud
+- Speed (launch deploy and patch servers faster), 
+Agile ( quicker business decisions), more Agile with cloud, 
+cloud can be more secure.
+
+API -
+Takes manual part of the equation
+Allows scripting
+allows easy flexibility in testing
+
+Where to start -
+Look at the tools currently used
+Be ready to throw out old tool set
+Make tool selection a team effort.
+
+What to ask -
+Waht laguages do you need to support?
