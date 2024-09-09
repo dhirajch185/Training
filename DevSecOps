@@ -1,0 +1,44 @@
+Agile - 
+Agile solves problem of lengthy releases (Agile SDLC----->  Evalueate -> Meet -> plan -> Design -> Develop -> Test)
+Agile projects have short 2 or 3 weeks sprints for a release.
+Agile allows product owenrs to - Define sprint backlogs and dev teams to prioritize the work. So they know what works and what doesn't quickly.
+Agile solves Development & testing issues. (in waterfall, the three areas of dev, test and operations are run by different groups)
+
+Agile need to also focus on non-development activities. like building servers patching and networking. Agile didnt touch operations.
+
+Devops - 
+Devops brings the three towers of dev test and ops groups together.
+There is only one team which performs all the functions in devops.
+
+Agile is the development methodology and Devops is a culture shift. its a way of thinking about an overall application lifecycle.
+
+Devops teams are more involved in security now. They are compliance focussed.
+
+Normal Security Scan: (Typically 1 or 2 weeks task done by a separate security testing team)
+Develop code -> Send code to security -> Scan code -> Send Pdf results -> Find false positives -> Fix security Defects.
+Too slow for Devops model
+
+Key Questions to address in Devops
+1) How to perform all the testing quickly? Time matters in Devops world
+2) Who is responsible for secuirty in Devops? Secuirty team or Dev team
+
+Focus on 3 Key things:
+1) Automation
+2) Education
+3) Empowerment of dev team
+
+DevSecOps -
+Merging of secuirty into Devops process
+Give dev team more ownership & accountability
+Integrate automated security in every step of process
+
+Automation is key to devSecOps.
+Static scans which takes hours wont work anymore.
+What tools can we use??
+Put something is script, have it run in background and push results to the developers. Into a tool which dev teams use.
+something like Jira or Quality center which they regularly use.
+One step further would be results should be through chats like slack or some other immediate notification mechanism so dev can act on the results quicker. not PDFs.
+
+Education:
+Dev team need to know secuirty basics.
+Ensure 
