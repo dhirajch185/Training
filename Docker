@@ -63,7 +63,7 @@ docker run --rm --entrypoint sh ubuntu -c "echo 'hello there' > /tmp/file && cat
 
 docker run --rm --entrypoint sh -v "/tmp/container":"/tmp" ubuntu -c "echo 'hello there' > /tmp/file && cat /tmp/file" (This will create a folder 'container' in ubuntu server and the container will write to the folder)
 
-
+docker run --name website -p 8080:80 -v "$PWD/website:/usr/share/nginx/html" --rm nginx  (Here docker mounts the outside/server's volume "$PWD/website" to inside container volume "/usr/share/nginx/html" and removes the container
 
 
 ------------Build own docker images and push it to dockerhub.--------------
@@ -99,6 +99,8 @@ docker run Our-first-imagename (to run our custom created image)
 docker images (list all the images created)
 
 docker rmi image_name (to delete the created image)
+
+docker system prune (This will remove:   - all stopped containers  - all networks not used by at least one container  - all dangling images  - unused build cache) and save space on your server.
 
 
 ---------------------------------------------------------------------------------------------------------------------
