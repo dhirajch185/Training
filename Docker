@@ -52,8 +52,19 @@ docker stop -t 0 ContainerID (Forcefully stop the container and the application.
 
 docker run -d --name naming-this-container image-name   (creating a container from the image and naming it) 
 
-docker run -d --name naming-this-container -p outsidePortNumber:insidePortnumber image-name (binds a port of container which is 'insidePortNumber' to the machines's 'outsideportnumber)
+docker run -d --name naming-this-container -p outsidePortNumber:insidePortnumber image-name (binds a port of Docker's container which is 'insidePortNumber' to the machine's port i.e, 'outsideportnumber)
 Example:  docker run -d --name our-web-servercontainer -p 5001:5000 our-web-server
+
+------------------------- Volume mounting to retain data after container is terminated -----------------
+
+docker run --rm --entrypoint sh ubuntu -c "echo 'hello there' > /tmp/file && cat /tmp/file" (This will write a file in the docker container but if you do a cat /tmp/file it is not accessible becuase its not in yor own machine)
+
+-v or --volume can mount a folder from our server to the docker container
+
+docker run --rm --entrypoint sh -v "/tmp/container":"/tmp" ubuntu -c "echo 'hello there' > /tmp/file && cat /tmp/file" (This will create a folder 'container' in ubuntu server and the container will write to the folder)
+
+
+
 
 ------------Build own docker images and push it to dockerhub.--------------
 Example Dockerfile is like below.
