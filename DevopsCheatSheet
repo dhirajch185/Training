@@ -4,7 +4,23 @@ ctrl+shift+c for copying text on ubutnu terminal
 
 ctrl+shift+v for pasting it :)
 
-to delete entire line, just press dd at the beginning of the line.
+Ctrl+l (clear screen)
+
+'i' to insert to vim
+
+Crtl+R and start typing the command you are searching for from your history of commands (To search from the list of commands we already run before)
+
+you can also type 'history' to see the list of commands previously typed.
+
+If the response tis too long for your command and you want to search for specific data, append your command with " | less" This should show you response like its paginated. You can search for a string in the text using "/ThisIsMySearchKeyword". Remember this should match exactly. since its case sensitive. To exit from the search, press "q"
+example: docker inspect alpine | less
+
+
+
+
+
+
+to delete entire line, just press "dd" at the beginning of the line.
 
 chmod 777 filename.sh  (To grant execute execute execute permissions for admin, group and user)
 
@@ -21,6 +37,8 @@ ps -ef | grep "amazon" (amazon process running on my instance)
 top ( cpu and memory metrics)
 
 free (how much ram is still free)
+
+df -h (gives you disk space usage even in terms of % as well)
 
 sudo su - ( switch to root user)
 
