@@ -110,3 +110,43 @@ You can even use exec to start terminal sessions within the container. This can 
 
 
 docker exec --interactive --tty container_ID bash
+docker exec -i -t Container_ID sh (would open the container with shell terminal just like above command.. )
+---------------------------- Container Performance -------------------------------------
+
+A good use case to fire up the container and monitor the cpu and memory usage would be
+
+---------------> docker stats container_ID
+
+example: First create a container --> "docker run --name=alpine --entrypoint=sleep infinity -d alpine" and then run "docker stats"
+To increase cpu usage, run this command --> "docker exec -i -t alpine sh" then when the terminal opens type "yes" to trigger a script to print 'y' indefinitely on the terminal. Observe the cpu usage on the other terminal for the container using "docker stats alpine"
+
+---------------> docker top container_ID
+shows the process running on the container without running an exec into the container.
+
+--------------> docker inspect container_ID
+shows advanced info of container in json format. to script against docker this is very helpful.
+
+example: docker inspect alpine | less  (q to quit from the search)
+
+----------------------------> Best Practices <---------------------------
+1) Always use docker official images if possible for base image
+2) Use Container image scanners if using verified image is not possible
+3) Always tag an image with proper version. Never use the tag 'latest' as it might cause issues for future builds.
+4) use users other than root to run the containers. like "docker run --rm -it --user someNon-root-user some-image:v1.0.1"
+We can do it in Dockerfile as well. like adding a line before ENTRYPOINT line as --> USER someNon-root-user
+
+---------------------------> Docker compose  <-----------------------------------------
+
+Docker compose makes starting and connecting multiple containers as easy as docker-compose up.
+
+----------------------------> Challenges  <---------------------------------------
+
+Difficult to link docker networks together across hosts
+controlling Docker containers across multiple hosts is cumbersome
+No built-in solutions for moving containers from host to host
+Production concerns (load balancing and securing traffic) difficult with docker client alone
+
+Kubernetes container orchestrator is capable of managing very large numbers of containers. It helps in grouping, scaling and connecting containers without outside world really easy.
+
+Load balancing and securing container traffic to/from the outside worlds are much easier with Kubernetes.
+
