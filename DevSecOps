@@ -51,21 +51,113 @@ Tell dev what tools to use.
 
 Sec team should provide the expertise. Partner with dev team. 
 Devops team is responsible for app security testing, Security team is accountable as auditors.
-
+----------------------------------------
 DevSecOps & Cloud
 - Speed (launch deploy and patch servers faster), 
 Agile ( quicker business decisions), more Agile with cloud, 
 cloud can be more secure.
-
+----------------
 API -
 Takes manual part of the equation
 Allows scripting
 allows easy flexibility in testing
-
+----------------------------
 Where to start -
 Look at the tools currently used
 Be ready to throw out old tool set
-Make tool selection a team effort.
-
+Make tool selection a team effort. This should support developers.
+-------------------------
 What to ask -
-Waht laguages do you need to support?
+What languages do you need to support? some are better with java, .net, node.js etc
+What technologies do we use? Docker or cloud etc..
+What types of tests need to be covered? like buffer overflow, authentication etc.
+how lightwegith is the too? portable? can dev team run it themselves? automated thorugh jenkins? how long the scans take?
+
+Opensource Tools are still good
+consider both commercial & opensource.
+key is to make it easy and possible. quick and easy by picking tools with more coverage.
+---------------------------
+Tpes of tools:
+Static application security testing (SAST). - source code security vulnerabilities analysis. High false postive rate. Tools is guessing where the data is going to go. Tool should have less false postive.
+Ex: Fortify, Veracode, Check marx - Commecial tools
+Ex: Find Security Bugs(FindSecBugs), Brakeman, PMD - Opensource
+-----------------------------
+Dynamic Application Security Testing (DAST) - Runs automated hacks (penetration scans). Spider the website and understand all pages and then send all inputs to hack the application. tends to take longer.
+
+Commercial - Invicti (Netsparker), Burp and Acunetix
+OpenSource - ZAP (lightweight and automatable)
+------------------------------
+Interactive Application Security Testing (IAST) - Secuirty tests happen while app is used. while unit testing, uat testing the test happens. This does instrumentation like performance tools like appdynamics.
+It works at java runtime or .net runtime level. See the code & sql queries called.
+Low false positive rate and provide immediate feedback. Sees code as its executed. Secuity on the fly.
+Immediate results that can be sent to dv team by chat ops like slack or pushing to defect tracker.
+Perfect for devops security testing.
+
+Commericial - Contrast, Seekr, Hdiv.
+Opensource - Contrast (limited to one project).
+
+-----------
+CI / CD
+Continuous integration and deployment is continously done every day.
+CI --->
+Dev's code is automatically checked-in.
+After check-in its integrated to shared environment with other developers.
+Integration testing will happen at this point to ensure app is ready for deployment.
+
+CD (continuous deployment)-->
+Automated release to prod after all the unit tests pass and build is determined to be ready.
+This goes together with continuous integration.
+
+CD also means (Continuous Delivery).
+- Build may not be deployed every time to production.
+
+Advantages. - Fast & Agile with multiple builds and deployments a day.
+Allows lower costs and shorter feedback time.
+sooner fix in dev cycle, lower the cost.
+
+Challenges:
+1) Fast pace. so testing quicker, coding quicker and deployment quicker
+2) Static scans which takes days will not work.
+--------------------------
+Containers and automation
+1) takes software and puts into single package for deployment.
+2) helps testing to make sure environments are the same.
+3) entire application stack is moved from env to env
+
+Container: Host OS (docker/ Kubernetes) + Libraries + application.
+
+---------------
+in DevSecOps
+1) use to organize all sec tests into a container and hand it to dev team.
+2) ramp up security from one application to hundreds.
+3) Create a container of secuirty tests for similar applications. example: one for java, one for .net etc..
+4) integrate with automation server which dev teams manage. example: jenkins environment integration for automation to run container to run all the sec tests.
+5) Artifactory - central repository for containers to keep them up to date. keep sec images updates. when changes, update the container with latest set of tools.
+
+-----------------------
+Infrastructure as code (IAC): Managing and provisioning infra by using code.
+- Cloud formaiton or Terraform to build infrastructure. Removes manual parts in deployments.
+- Important because of its Speed. easily integrate with pipeline.
+- all the environments are consistent. Deploy same code every time.
+- Development is more reliable. when process & infrastructuer is repeatable, your testing unit testing performed by devops team will be quicker and less errors. (saves time and money).
+------
+secure the IAC??
+- scan for vulnerabilities before check-in .  Do it as soon as possible in lifecycle.
+- do scanning next to Static and secret scanning. A good shift-left strategy.
+
+dev buiilds iac - check to source code repo - build is triggered. jenkins send to IAC scanner. before deployment any bugs goes to bug tracking tool before deployment.
+
+-------------
+
+Security as code.
+- Goal is not GUI integration.
+- Use Apis or scripts.
+- Build security into the pipeline using automation.
+
+-------------
+Security as code is mapping out your code and infrastructure to find places where automated security checks and gates can be added.
+---------
+Add any security checks that are possible into code. (like autorization checks, authentication checks etc)
+supplement standard tests like sast  dast.
+
+
