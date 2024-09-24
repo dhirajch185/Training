@@ -159,5 +159,13 @@ Security as code is mapping out your code and infrastructure to find places wher
 ---------
 Add any security checks that are possible into code. (like autorization checks, authentication checks etc)
 supplement standard tests like sast  dast.
+over time move any manual steps to code for automation.
 
+examples: Automate checks for legal and compliance.
+Automate security control gates.
+Automate access control checks.
+
+-------------
+Application security in devsecops
+- 
 
