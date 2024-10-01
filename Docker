@@ -62,6 +62,10 @@ docker volume ls (will list the volumes created and ready for mounting)
 
 docker run -d --mount source=volume_name,target=/app nginx:latest (mounting the created volume 'volume_name' and using the folder on the created volume '/app' and mounting it to the image ngnix here)
 
+we can check the status using 'docker inspect container_name' command.
+
+Note: we can only remove the mounted volumes when the container is removed.
+
 docker run --rm --entrypoint sh ubuntu -c "echo 'hello there' > /tmp/file && cat /tmp/file" (This will write a file in the docker container but if you do a cat /tmp/file it is not accessible becuase its not in yor own machine)
 
 -v or --volume can mount a folder from our server to the docker container
