@@ -56,6 +56,7 @@ docker run -d --name naming-this-container -p outsidePortNumber:insidePortnumber
 Example:  docker run -d --name our-web-servercontainer -p 5001:5000 our-web-server
 
 ------------------------- Volume mounting to retain data after container is terminated -----------------
+docker volume create volume_name (this will create a volume by the name "volume_name" on the virtualmachine which can be mounted on to 'one' or 'even multiple' containers.
 
 docker run --rm --entrypoint sh ubuntu -c "echo 'hello there' > /tmp/file && cat /tmp/file" (This will write a file in the docker container but if you do a cat /tmp/file it is not accessible becuase its not in yor own machine)
 
