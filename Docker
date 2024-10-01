@@ -58,6 +58,10 @@ Example:  docker run -d --name our-web-servercontainer -p 5001:5000 our-web-serv
 ------------------------- Volume mounting to retain data after container is terminated -----------------
 docker volume create volume_name (this will create a volume by the name "volume_name" on the virtualmachine which can be mounted on to 'one' or 'even multiple' containers.
 
+docker volume ls (will list the volumes created and ready for mounting)
+
+docker run -d --mount source=volume_name,target=/app nginx:latest (mounting the created volume 'volume_name' and using the folder on the created volume '/app' and mounting it to the image ngnix here)
+
 docker run --rm --entrypoint sh ubuntu -c "echo 'hello there' > /tmp/file && cat /tmp/file" (This will write a file in the docker container but if you do a cat /tmp/file it is not accessible becuase its not in yor own machine)
 
 -v or --volume can mount a folder from our server to the docker container
