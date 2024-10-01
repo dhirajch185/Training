@@ -55,6 +55,8 @@ to logout of the user use ---> Ctrl + D
 
 cron    (cron job to schedule the report to check running instances)
 
+-----Remote connection to aws machine ----------->>>>> ssh -i aws_login.pem ubuntu@publicIPAddress
+
 scp -i /home/dhiraj/Downloads/aws_login.pem /home/dhiraj/Downloads/aws_login.pem ubuntu@XXAWS PUblic IP AddressXX:/home/ubuntu ( copy files from local machine to aws instance securely)
 
 scp -i /home/dhiraj/Downloads/aws_login.pem /home/dhiraj/scripts/aws_resource_tracker.sh ubuntu@XXAWS PUblic IP AddressXX:/home/ubuntu
