@@ -1,4 +1,13 @@
 kubectl get pods
 kubectl get pods -o wide
 kubectl describe pod <podname>
-kubectl create -f <podcreation.yaml filename>
+kubectl create -f <podcreation.yaml filename> ---------- Delcarative Way
+kubectl run mynginx_podname --image=nginx_dockerHubImageName ---- imperative way
+kubectl describe pod <pod_name> | grep -c "Containers:"  ---------> to find the number of containers used in the pod
+
+------------- Troubleshooting -----------------
+After fixing the image name, you can re-deploy the changes using below command
+kubectl apply -f podCreate.yaml
+         or
+kubectl edit pod <podName>
+Then check the pod details, you should see the STATUS as running
