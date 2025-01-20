@@ -4,10 +4,13 @@ kubectl describe pod <podname>
 kubectl create -f <podcreation.yaml filename> ---------- Delcarative Way
 kubectl run mynginx_podname --image=nginx_dockerHubImageName ---- imperative way
 kubectl describe pod <pod_name> | grep -c "Containers:"  ---------> to find the number of containers used in the pod
+kubectl create -f .\rc-definition.yaml (Create replication Controller)
+kubectl delete rc myapp-rc ----- Delete replication controller
 kubectl get replicaset
 kubectl replace -f replicaset-definition.yaml ( will replace the existing replicaset with any new changes) --- Declarative way
 kubectl scale --replicas=6 -f replicaset-definition.yaml -- Imperative way
 kubectl scale --replicas=6 replicaset myapp-replicaset --- Imperative way with type & name format
+kubectl delete replicaset myapp-replicaset -- Delete replicaset
 
 ------------- Troubleshooting -----------------
 After fixing the image name, you can re-deploy the changes using below command
@@ -19,6 +22,8 @@ Then check the pod details, you should see the STATUS as running
 ---------------- Terminologies ---------------
 replication controller - create multiple pods or nodes to load balance. (older technology and obsolete)
 Replica set - new way of implementation (apiversion : apps/v1, selector mandatory)
+
+
 
 
 ---------------- scenarios -------------
