@@ -10,6 +10,7 @@ kubectl get replicaset
 kubectl replace -f replicaset-definition.yaml ( will replace the existing replicaset with any new changes) --- Declarative way
 kubectl scale --replicas=6 -f replicaset-definition.yaml -- Imperative way
 kubectl scale --replicas=6 replicaset myapp-replicaset --- Imperative way with type & name format
+kubectl edit replicaset myapp-replicaset ------------ Risky.. Imperative way to make changes to the replicaset. Note: Careful.. Saving the edited file will immediately apply the changes.
 kubectl delete replicaset myapp-replicaset -- Delete replicaset
 kubectl create -f deployment-definition.yaml
 kubectl get deployments
