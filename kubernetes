@@ -11,6 +11,9 @@ kubectl replace -f replicaset-definition.yaml ( will replace the existing replic
 kubectl scale --replicas=6 -f replicaset-definition.yaml -- Imperative way
 kubectl scale --replicas=6 replicaset myapp-replicaset --- Imperative way with type & name format
 kubectl delete replicaset myapp-replicaset -- Delete replicaset
+kubectl create -f deployment-definition.yaml
+kubectl get deployments
+kubectl get all  ----------------- Shows all the resources created
 
 ------------- Troubleshooting -----------------
 After fixing the image name, you can re-deploy the changes using below command
