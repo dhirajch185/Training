@@ -19,8 +19,9 @@ kubectl rollout status deployment/myapp-deployment
 kubectl apply -f deployment-definition.yaml  ----------- Make changes to the deployment yaml (like image version) and upgrade
 kubectl set image deployment/myapp-deployment \ nginx-container=nginx:1.9.1 ------- upgrading imperatively using container name (only for toubelshooting)
 
-
+kubectl rollout status deployment.apps/myapp-deployment
 kubectl rollout history deployment/myapp-deployment
+kubectl rollout undo deployment/myapp-deployment
 
 
 
