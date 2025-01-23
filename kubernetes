@@ -15,6 +15,7 @@ kubectl delete replicaset myapp-replicaset -- Delete replicaset
 kubectl create -f deployment-definition.yaml
 kubectl get deployments
 kubectl get all  ----------------- Shows all the resources created
+kubectl get pods,svc ----------------- Shows just pods and services created
 kubectl rollout status deployment/myapp-deployment
 kubectl apply -f deployment-definition.yaml  ----------- Make changes to the deployment yaml (like image version) and upgrade
 kubectl set image deployment/myapp-deployment \ nginx-container=nginx:1.9.1 ------- upgrading imperatively using container name (only for toubelshooting)
