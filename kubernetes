@@ -23,6 +23,10 @@ kubectl rollout status deployment.apps/myapp-deployment
 kubectl rollout history deployment/myapp-deployment
 kubectl rollout undo deployment/myapp-deployment
 
+kubectl create -f .\service-definition.yaml
+kubectl get services
+minikube service myapp-service --url -------------------- to get the url of service running on minikube node
+
 
 
 ------------- Troubleshooting -----------------
@@ -36,7 +40,9 @@ Then check the pod details, you should see the STATUS as running
 replication controller - create multiple pods or nodes to load balance. (older technology and obsolete)
 Replica set - new way of implementation (apiversion : apps/v1, selector mandatory)
 Rolling upgrade.
-
-
+cillium/flannel - used for internal routing, ip address allocation between nodes and pods in a cluster
+NodePort (range 30000 to 32767)
+ClusterIP
+LoadBalancer
 
 ---------------- scenarios -------------
