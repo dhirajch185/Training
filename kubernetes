@@ -28,6 +28,7 @@ kubectl create -f .\service-definition.yaml
 kubectl get services
 minikube service myapp-service --url -------------------- to get the url of service running on minikube node
 
+kubectl delete pods --all -n default ------- Deltes all the pods running on the namespace by the name 'default'
 
 
 ------------- Troubleshooting -----------------
