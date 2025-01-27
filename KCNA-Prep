@@ -1,0 +1,10 @@
+Ques-	Answers
+Who maintains and develops the CRI Control command line utility?	Kubernetes community
+In the context of Kubernetes, what is a cluster?	A set of nodes grouped together
+What is the role of etcd in a Kubernetes cluster?	All of the options are correct
+What is the purpose of the kubectl tool in Kubernetes?	It is used to deploy and manage applications on a Kubernetes cluster.
+Which container technology does Docker primarily utilize for its containers?	LXC
+Which of the following is an essential element of cloud native?	Microservices
+How can you specify a specific runtime endpoint when using the CRI Control tool?	Setting the CONTAINER_RUNTIME_ENDPOINT environment variable,Using the --runtime-endpoint command line option
+What is containerization?	Running microservices in their own container
+Which container orchestration technology is known for being a bit difficult to set up and get started, but provides several features to customize the deployment?	Kubernetes
