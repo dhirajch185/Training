@@ -9,5 +9,13 @@ How can you specify a specific runtime endpoint when using the CRI Control tool?
 What is containerization?	Running microservices in their own container
 Which container orchestration technology is known for being a bit difficult to set up and get started, but provides several features to customize the deployment?	Kubernetes
 
-Replication Controller: 
+Replication Controller: Uses labels to filter and select the pods to monitor
 Permanently switch to a namespace so no namespace mentioned everytime: Use the kubectl config set-context $(kubectl config current-context) --namespace=
+Controllers: Handles networking and communication b/w pods in kubernetes
+kubectl apply is declarative command where 'kubectl run' and 'kubectl delete' and 'kubectl create' are imperative.
+quotas in namespace is used to limit the resources like cpu and memory which can be used by objects within a namespace.
+metadata in a kubernetes definition is a 'dictionary'
+
+db-service.dev.svc.cluster.local  ----> To connect a web-app pod in the default namespace to a service named "db-service" in the "dev" namespace, what is the correct hostname format?
+
+
