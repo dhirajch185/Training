@@ -18,4 +18,7 @@ metadata in a kubernetes definition is a 'dictionary'
 
 db-service.dev.svc.cluster.local  ----> To connect a web-app pod in the default namespace to a service named "db-service" in the "dev" namespace, what is the correct hostname format?
 
+Live config on kubernetes cluster ---> Regardless of the approach used to create an object in Kubernetes, what does Kubernetes use to store information about the object internally?
+
+The selector helps the ReplicaSet identify pods that were created before the ReplicaSet.
 
