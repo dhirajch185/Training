@@ -31,6 +31,10 @@ minikube service myapp-service --url -------------------- to get the url of serv
 kubectl delete pods --all -n default ------- Deltes all the pods running on the namespace by the name 'default'
 
 
+---------------------namespace ---------------------
+
+kubectl config set-context $(kubectl config current-context) --namespace=dev  --> Permanently switch to a namespace so no namespace mentioned everytime
+
 ------------- Troubleshooting -----------------
 After fixing the image name, you can re-deploy the changes using below command
 kubectl apply -f podCreate.yaml
