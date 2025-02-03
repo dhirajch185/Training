@@ -52,4 +52,28 @@ NodePort (range 30000 to 32767)
 ClusterIP
 LoadBalancer
 
+
+--------------------- Binding for Manual scheduling ---------------
+create a 'Binding' object (yaml file) to assign a node name to a existing pod and send a post request to the pod's binding api.
+Thus mimicking what the actual scheduler does.
+
 ---------------- scenarios -------------
+kubectl get pods --selector app=App1     -> filters all the pods with the label selector app=App1
+
+kubectl taint nodes node-name key:value:taint-effect ----> to taint (label) the nodes so pods which do not tolerate (match the labels) the taint will not be placed in the node with the taint value.
+
+Pods which do not tolerate the taint will have 3 response status ---> NoSchedule (pods will not be scheduled on the nodes), PreferNoSchedule (system will try to place the pod on the node but 'no gurantee'), NoExecute (New pods will not be scheduled and any existing pods which do not tolerate the taint will be evicted as well from the node) 
+
+example: kubectl taint nodes node1 app=blue:NoSchedule
+
+Tolerations are added to the pods with tolerations added to spec of the pod yaml defition.
+spec:
+  tolerations:
+    - key: "app"
+      operator: "Equal"
+      value: "blue"
+      effect: "NoSchedule"
+*********Note: taint and toleration doesnt mean the tolerated pod always ends up in a tainted node. it can be distributed to untainted node as well. This is just to restrict the specific nodes to have only certain type of pods. To ensure required pods to end up to required nodes, we use a different concept called 'NodeAffinity'
+
+
+
