@@ -22,3 +22,13 @@ Live config on kubernetes cluster ---> Regardless of the approach used to create
 
 The selector helps the ReplicaSet identify pods that were created before the ReplicaSet.
 
+only through direct SSH access to the conatiner ---> By default, when a Docker container is deployed within a pod, how can users access the application?
+
+Use the kubectl create -f quota-definition.yaml command and provide a definition file with the kind as ResourceQuota, namespace, and resource limits.------->How can you limit resources in a namespace in Kubernetes?
+
+Creates a new object based on the provided configuration,Updates an existing object based on the provided configuration ----> What does the 'kubectl apply' command do in the declarative approach of managing objects in Kubernetes?
+
+	
+Use the "kubectl scale" command with the name of the replica set and provide the new number of replicas with the replicas parameter. ----> How can you update the number of replicas in a replica set using the kubectl scale command?
+
+Managing and upgrading the underlying instances seamlessly using rolling updates ---> What is the purpose of a Deployment in Kubernetes?
