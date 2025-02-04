@@ -73,7 +73,8 @@ spec:
       operator: "Equal"
       value: "blue"
       effect: "NoSchedule"
-*********Note: taint and toleration doesnt mean the tolerated pod always ends up in a tainted node. it can be distributed to untainted node as well. This is just to restrict the specific nodes to have only certain type of pods. To ensure required pods to end up to required nodes, we use a different concept called 'NodeAffinity'
+*********Note: taint and toleration doesnt mean the tolerated pod always ends up in a tainted node. it can be distributed to untainted node as well. This is just to restrict the specific nodes to have only certain type of pods. To ensure required pods to end up to required nodes, we use a different concept called 'NodeSelector' and 'NodeAffinity' 
 
-
+kubectl label nodes <node name> <label-key>= <lable-value>  ------> To label a node
+eg: kubecl label nodes node-1 size=Large
 
