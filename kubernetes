@@ -75,6 +75,27 @@ spec:
       effect: "NoSchedule"
 *********Note: taint and toleration doesnt mean the tolerated pod always ends up in a tainted node. it can be distributed to untainted node as well. This is just to restrict the specific nodes to have only certain type of pods. To ensure required pods to end up to required nodes, we use a different concept called 'NodeSelector' and 'NodeAffinity' 
 
-kubectl label nodes <node name> <label-key>= <lable-value>  ------> To label a node
+kubectl label nodes <node name> <label-key>= <lable-value>  ------> To label a node with 'nodeselctor' property under spec in Pod definition yaml file.
 eg: kubecl label nodes node-1 size=Large
+
+
+------- Pod lifecycle -- stages
+Scheduler places a pod in a node based on these affinity rules
+requiredDuringSchedulingIgnoreDuringExecution
+preferredDuringScheduingIgnoreDuringExecution
+
+During Scheduing - Pod does not exist and created for the first time
+During Execution - This is where the changes is made in the label of the node after the pods are allocated to the node.
+
+Affinity rules are considered and pods are placed on the right nodes when the pods are newly created.
+If nodes with matching labels are not available, with requiredDuringSchedulingIgnoreDuringExecution type, the scheduler will mandate that the pod will be placed on a node with given affinity rules. If it cannot find one, the pod will not be scheduled. If placement of pod is crucial, this type will be used. If its not crucial then use preferredDuringScheduingIgnoreDuringExecution, that way it will place it if it cant find the mathing labels.
+
+IgnoreDuringExecution means, already allocated pods doesnt have any change if node lable is made.
+
+
+preferredDuringScheduingRequiredDuringExecution -- This is when after label change, the pods are evicted from the node if the nodeAffinity rules doesn't match.
+
+
+
+
 
