@@ -13,6 +13,11 @@ kubectl scale --replicas=6 replicaset myapp-replicaset --- Imperative way with t
 kubectl edit replicaset myapp-replicaset ------------ Risky.. Imperative way to make changes to the replicaset. Note: Careful.. Saving the edited file will immediately apply the changes.
 kubectl delete replicaset myapp-replicaset -- Delete replicaset
 kubectl create -f deployment-definition.yaml
+kubectl create deployment --image=nginx nginx
+kubectl create deployment --image=nginx nginx --dry-run=client -o yaml > nginx-deployment.yaml  ---------> Generate Deployment YAML file (-o yaml). Don’t create it(–dry-run)
+
+kubectl create deployment --image=nginx nginx --replicas=4 --dry-run=client -o yaml > nginx-deployment.yaml  -----> deployment yaml file with replicas as needed
+
 kubectl get deployments
 kubectl get all  ----------------- Shows all the resources created
 kubectl get pods,svc ----------------- Shows just pods and services created
@@ -94,7 +99,10 @@ IgnoreDuringExecution means, already allocated pods doesnt have any change if no
 
 
 preferredDuringScheduingRequiredDuringExecution -- This is when after label change, the pods are evicted from the node if the nodeAffinity rules doesn't match.
+--------------------------------------------
+kubectl run redis --image=redis --dry-run=client -o yaml > redis-pod.yaml -------->to create a yaml file from 'kubectl run' command is like. Reember --dry-run will not create the resource just the yaml file.
 
+kubectl get replicaset new-replica-set -o yaml > replicaset-definition.yaml
 
 
 
