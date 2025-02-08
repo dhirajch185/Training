@@ -16,6 +16,8 @@ kubectl create -f deployment-definition.yaml
 kubectl create deployment --image=nginx nginx
 kubectl create deployment --image=nginx nginx --dry-run=client -o yaml > nginx-deployment.yaml  ---------> Generate Deployment YAML file (-o yaml). Don’t create it(–dry-run)
 
+kubectl create deployment --replicas=3 --image=httpd:2.4-alpine httpd-frontend --dry-run=client -o yaml > httpd-deployment-definition.yaml  ----> created a file as required
+
 kubectl create deployment --image=nginx nginx --replicas=4 --dry-run=client -o yaml > nginx-deployment.yaml  -----> deployment yaml file with replicas as needed
 
 kubectl get deployments
@@ -29,6 +31,8 @@ kubectl rollout status deployment.apps/myapp-deployment
 kubectl rollout history deployment/myapp-deployment
 kubectl rollout undo deployment/myapp-deployment
 
+******** Services nodePort range is -- 30K to 32767 ******
+-- service uses random algorithm to distribute load across all the pods which it had identified based on the service definition file labels which matched with pods labels from their definition.
 kubectl create -f .\service-definition.yaml
 kubectl get services
 minikube service myapp-service --url -------------------- to get the url of service running on minikube node
