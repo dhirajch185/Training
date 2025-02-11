@@ -69,6 +69,11 @@ Thus mimicking what the actual scheduler does.
 ---------------- scenarios -------------
 kubectl get pods --selector app=App1     -> filters all the pods with the label selector app=App1
 
+kubectl expose pod redis --port=6379 --name redis-service --------> Create a service redis-service to expose the redis application within the cluster on port 6379.
+
+kubectl run httpd --image=httpd:alpine --port=80 --expose ------> Create a pod called httpd using the image httpd:alpine in the default namespace. Next, create a service of type ClusterIP by the same name (httpd). The target port for the service should be 80. Try to do this with as few steps as possible.
+
+
 kubectl taint nodes node-name key:value:taint-effect ----> to taint (label) the nodes so pods which do not tolerate (match the labels) the taint will not be placed in the node with the taint value.
 
 Pods which do not tolerate the taint will have 3 response status ---> NoSchedule (pods will not be scheduled on the nodes), PreferNoSchedule (system will try to place the pod on the node but 'no gurantee'), NoExecute (New pods will not be scheduled and any existing pods which do not tolerate the taint will be evicted as well from the node) 
