@@ -78,7 +78,7 @@ kubectl expose pod redis --port=6379 --name redis-service --------> Create a ser
 kubectl run httpd --image=httpd:alpine --port=80 --expose ------> Create a pod called httpd using the image httpd:alpine in the default namespace. Next, create a service of type ClusterIP by the same name (httpd). The target port for the service should be 80. Try to do this with as few steps as possible.
 
 
-kubectl taint nodes node-name key:value:taint-effect ----> to taint (label) the nodes so pods which do not tolerate (match the labels) the taint will not be placed in the node with the taint value.
+kubectl taint nodes node-name key=value:taint-effect ----> to taint (label) the nodes so pods which do not tolerate (match the labels) the taint will not be placed in the node with the taint value.
 
 Pods which do not tolerate the taint will have 3 response status ---> NoSchedule (pods will not be scheduled on the nodes), PreferNoSchedule (system will try to place the pod on the node but 'no gurantee'), NoExecute (New pods will not be scheduled and any existing pods which do not tolerate the taint will be evicted as well from the node) 
 
@@ -94,8 +94,9 @@ spec:
 *********Note: taint and toleration doesnt mean the tolerated pod always ends up in a tainted node. it can be distributed to untainted node as well. This is just to restrict the specific nodes to have only certain type of pods. To ensure required pods to end up to required nodes, we use a different concept called 'NodeSelector' and 'NodeAffinity' 
 
 kubectl label nodes <node name> <label-key>= <lable-value>  ------> To label a node with 'nodeselctor' property under spec in Pod definition yaml file.
-eg: kubecl label nodes node-1 size=Large
+eg: kubecl label nodes node01 size=Large
 
+----------> Run the command: kubectl taint nodes controlplane node-role.kubernetes.io/control-plane:NoSchedule- to untaint the node. ************ Observe the NoSchedule have a '-' at the end to untaint it????
 
 ------- Pod lifecycle -- stages
 Scheduler places a pod in a node based on these affinity rules
