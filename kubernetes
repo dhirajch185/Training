@@ -8,6 +8,8 @@ kubectl create -f .\rc-definition.yaml (Create replication Controller)
 kubectl delete rc myapp-rc ----- Delete replication controller
 kubectl get replicaset
 kubectl replace -f replicaset-definition.yaml ( will replace the existing replicaset with any new changes) --- Declarative way
+kubectl replace --force -f pod-definition.yaml ( will 
+
 kubectl scale --replicas=6 -f replicaset-definition.yaml -- Imperative way
 kubectl scale --replicas=6 replicaset myapp-replicaset --- Imperative way with type & name format
 kubectl edit replicaset myapp-replicaset ------------ Risky.. Imperative way to make changes to the replicaset. Note: Careful.. Saving the edited file will immediately apply the changes.
@@ -65,6 +67,8 @@ LoadBalancer
 --------------------- Binding for Manual scheduling ---------------
 create a 'Binding' object (yaml file) to assign a node name to a existing pod and send a post request to the pod's binding api.
 Thus mimicking what the actual scheduler does.
+
+If a scheduler is missing, to assign a node manually to a pod, use the field 'nodeName: node01' to the pod definition to get the job done.
 
 ---------------- scenarios -------------
 kubectl get pods --selector app=App1     -> filters all the pods with the label selector app=App1
@@ -149,6 +153,19 @@ Both the above commands have their own challenges. While one of them cannot acce
 
 kubectl expose
 command. If you need to specify a node port, generate a definition file using the same command and manually input the nodeport before creating the service.
+
+
+************ kubectl apply (Declarative way) *****************
+Kubernetes nomally takes local config file (stored on our local system),  a live object definition (stored in kubernetes memory)..  on kubernetes and 'last applied configuration'(stored in Live ojbect configuration as an 'annotation' ) before deciding what changes to be made.
+If the object doesn't exist, an object is created.
+Ideally, an object similar to what we had defined locally is created within kubernetes, but also with additional fields to store status of the object. This is the Live object configuration of the object in kubernetes cluster.
+when we do kubectl apply, it does a bit more... the yaml of the local is converted to a json format and then stored as 'last applied configuration' 
+For any upgrades, all three objects are compared to understand what changes are to be made to the live object.
+If any field is removed from local configuration, the 'last applied config' helps to identify the removed fields and 'live object configuration' is upgraded accordingly.
+Note This is only done with kubectl apply(declarative) not 'kubectl create'(imperative) or 'kubectl replace'. They don't store 'last applied configuration' like this.
+
+
+
 
 
 
