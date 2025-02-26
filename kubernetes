@@ -8,7 +8,8 @@ kubectl create -f .\rc-definition.yaml (Create replication Controller)
 kubectl delete rc myapp-rc ----- Delete replication controller
 kubectl get replicaset
 kubectl replace -f replicaset-definition.yaml ( will replace the existing replicaset with any new changes) --- Declarative way
-kubectl replace --force -f pod-definition.yaml ( will 
+kubectl replace --force -f pod-definition.yaml ( will delete and recreate the pod)
+
 
 kubectl scale --replicas=6 -f replicaset-definition.yaml -- Imperative way
 kubectl scale --replicas=6 replicaset myapp-replicaset --- Imperative way with type & name format
@@ -25,6 +26,7 @@ kubectl create deployment --image=nginx nginx --replicas=4 --dry-run=client -o y
 kubectl get deployments
 kubectl get all  ----------------- Shows all the resources created
 kubectl get pods,svc ----------------- Shows just pods and services created
+kubectl get pods --watch ----------- will show the status of the pods continuously if it changes.
 kubectl rollout status deployment/myapp-deployment
 kubectl apply -f deployment-definition.yaml  ----------- Make changes to the deployment yaml (like image version) and upgrade
 kubectl set image deployment/myapp-deployment \ nginx-container=nginx:1.9.1 ------- upgrading imperatively using container name (only for toubelshooting)
