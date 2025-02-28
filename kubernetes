@@ -167,6 +167,11 @@ If any field is removed from local configuration, the 'last applied config' help
 Note This is only done with kubectl apply(declarative) not 'kubectl create'(imperative) or 'kubectl replace'. They don't store 'last applied configuration' like this.
 
 *********************************************** Static Pod Path ****************
+static pods will have nodename appended to them.
+another way is to look at its yaml definition and check its 'OwnerReference'. if its a 'replicaSet' then its not a staic pod. if ownerReference is a 'node' its a static pod.
+
+
+
 What is the path of the directory holding the static pod definition files? --> Run the command ps -aux | grep kubelet and identify the config file - --config=/var/lib/kubelet/config.yaml. Then check in the config file for staticPodPath. --> found this --config=/var/lib/kubelet/config.yaml --> now do this --> cat /var/lib/kubelet/config.yaml | grep 'staticPodPath'
 output is --> staticPodPath: /etc/kubernetes/manifests
 
