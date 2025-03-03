@@ -1,0 +1,6 @@
+If we find issues with Git SSl verification. An error like "fatal: unable to access 'https://gitlab-XX.XXX.com/Perf-Test/jmeter/XXX-jmeter-scripts.git/': SSL peer certificate or SSH remote key was not OK"
+use this config change to temporarily disable ssl verification -----> git config --global http.sslVerify false
+Note: its a security risk to disable it gloabally. so please use it temporarily
+
+A permanent fix woudl be to refer to the cacerts that have the imported certificate:
+git config --system http.sslCAPath /path/to/cacerts
