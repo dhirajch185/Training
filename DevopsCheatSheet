@@ -36,6 +36,11 @@ ls -ltr -> List the files
 
 ps -ef | grep "amazon" (amazon process running on my instance)
 
+
+ps -aux | grep kubelet
+path of the directory holding the static pod definition files? --> Run the command ps -aux | grep kubelet and identify the config file - --config=/var/lib/kubelet/config.yaml. Then check in the config file for staticPodPath. --> found this --config=/var/lib/kubelet/config.yaml --> now do this --> cat /var/lib/kubelet/config.yaml | grep 'staticPodPath'
+output is --> staticPodPath: /etc/kubernetes/manifests
+
 top ( cpu and memory metrics)
 
 free (how much ram is still free)
