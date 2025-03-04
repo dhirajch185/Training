@@ -177,5 +177,7 @@ output is --> staticPodPath: /etc/kubernetes/manifests
 
 ps -ef | grep kube-apiserver | grep admission-plugins -------> Since the kube-apiserver is running as pod you can check the process to see enabled and disabled plugins.
 
-
+Another way is
+kubectl get pods -n kube-system.. get details of kubeapiserver. Then grep using the command
+kubectl exec -it kube-apiserver-controlplane -n kube-system --kube-apiserver -h | grep 'enable-admission-plugins'
 
