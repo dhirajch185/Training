@@ -181,3 +181,18 @@ Another way is
 kubectl get pods -n kube-system.. get details of kubeapiserver. Then grep using the command
 kubectl exec -it kube-apiserver-controlplane -n kube-system --kube-apiserver -h | grep 'enable-admission-plugins'
 
+
+**************************** webhooks ****************
+
+Create TLS secret webhook-server-tls for secure webhook communication in webhook-demo namespace.
+
+We have already created below cert and key for webhook server which should be used to create secret.
+
+Certificate : /root/keys/webhook-server-tls.crt
+
+Key : /root/keys/webhook-server-tls.key
+
+
+--> kubectl -n webhook-demo create secret tls webhook-server-tls \
+    --cert "/root/keys/webhook-server-tls.crt" \
+    --key "/root/keys/webhook-server-tls.key"
