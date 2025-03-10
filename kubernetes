@@ -238,3 +238,19 @@ We have added pod definition file under /root/pod-with-conflict.yaml
 Mutating webhook should reject the request as its asking to run as root user without setting runAsNonRoot: false
 ------ output  -----> controlplane ~ ➜  k create -f pod-with-conflict.yaml 
 Error from server: error when creating "pod-with-conflict.yaml": admission webhook "webhook-server.webhook-demo.svc" denied the request: runAsNonRoot specified, but runAsUser set to 0 (the root user)
+
+
+****************************** install metrics server with yaml manifest*********************
+
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+
+k top nodes -----------> for nodes resource consumption
+k top pods ------->for pods resource consumption
+
+k top pods -n default --sort-by='memory'
+k top pods -n default --sort-by='cpu'| tail -1 -------> least cpu consuming pod
+
+*************************** inspect logs **************************
+
+k logs webapp-2
+
