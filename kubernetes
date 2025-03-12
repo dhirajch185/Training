@@ -254,3 +254,32 @@ k top pods -n default --sort-by='cpu'| tail -1 -------> least cpu consuming pod
 
 k logs webapp-2
 
+-------------------------------- command & Args -------------------------
+Create a pod with the ubuntu image to run a container to sleep for 5000 seconds. 
+
+---
+apiVersion: v1 
+kind: Pod 
+metadata:
+  name: ubuntu-sleeper-2 
+spec:
+  containers:
+  - name: ubuntu
+    image: ubuntu
+    command:
+      - "sleep"
+      - "5000"
+
+----------------------------------------------
+
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ubuntu-sleeper-pod
+spec:
+  containers:
+    - name: ubuntu-sleeper
+      image: ubuntu-sleeper
+      command: ["sleep2.0"]
+      args: ["10"]
