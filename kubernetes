@@ -270,6 +270,29 @@ spec:
       - "sleep"
       - "5000"
 
+
+*************************** secrets ************
+kubectl create secret generic Secret_name --from-literal=<secret_key1>=<secret_value1> \
+                                          --from-literal=<secret_key2>=<secret_value2> ------> Imperative way
+
+kubectl create secret generic Secret_name --from-file=<filepath>
+eg: kubectl create secret generic app_secret --from-file=app_secret.properties  -----> imperative way
+
+-----------------------
+apiVersion: v1
+kind: Secret
+metadata:
+  name: secret-ssh-auth
+ata:
+  ssh-privatekey: UG91cmluZzYlRW1vdGljb24lU2N1YmE=    
+
+kubectl create -f secretSshauth.yaml -------> declarative way
+
+to encrypt, we can use this command in terminal ...> echo -n "Pouring6%Emoticon%Scuba" | base64
+
+echo -n "Pouring6%Emoticon%Scuba" | base64 --decode
+
+to view the secret --> kubectl get secret secret-ssh-auth -o yaml
 ----------------------------------------------
 
 
