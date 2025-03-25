@@ -254,6 +254,8 @@ k top pods -n default --sort-by='cpu'| tail -1 -------> least cpu consuming pod
 
 k logs webapp-2
 
+kubectl logs <pod_name> -c <container_name>     ---> To inspect logs of a specific container in a pod
+
 -------------------------------- command & Args -------------------------
 Create a pod with the ubuntu image to run a container to sleep for 5000 seconds. 
 
