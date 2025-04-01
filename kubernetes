@@ -334,12 +334,12 @@ kubectl autoscale deployment nginx-deployment --max=3 --cpu-percent=80 --> imper
 ------------------------------------------------------------  VPA autoscaler ---------------------------------------------
 We have prepared the required YAML files for you to deploy the Vertical Pod Autoscaler (VPA). Simply follow the steps below to apply the necessary configurations:
 
-Step 1: Install VPA Custom Resource Definitions (CRDs)
+Step 1: Install VPA Custom Resource Definitions (CRDs)  <<-----------------------------
 These CRDs allow Kubernetes to recognize the custom resources that VPA uses to function properly. To install them, run this command:
 
 kubectl apply -f /root/vpa-crds.yml
 
-Step 2: Install VPA Role-Based Access Control (RBAC)
+Step 2: Install VPA Role-Based Access Control (RBAC)   <<---------------------------
 RBAC ensures that VPA has the appropriate permissions to operate within your Kubernetes cluster. To install the RBAC settings, run:
 
 kubectl apply -f /root/vpa-rbac.yml
@@ -374,3 +374,15 @@ By following these steps, the Vertical Pod Autoscaler will be installed and read
 
 ---------------------------------------------------------------------------
 Which of the following are the VPA CRDs that get installed as part of the Vertical Pod Autoscaler setup? --> kubectl get crds | grep verticalpodautoscaler
+
+check Custom Resource Definitions (CRD) --> kubectl get crd
+
+--------------------
+VPA deployments in kube-system namespace
+
+k get deploy -n kube-system | grep vpa-*
+vpa-admission-controller   1/1     1            1           3m53s
+vpa-recommender            1/1     1            1           3m54s
+vpa-updater                1/1     1            1           3m54s
+
+check logs for vpa updater -------> k -n kube-system logs vpa-updater-pod_name 
