@@ -308,8 +308,9 @@ spec:
       image: ubuntu-sleeper
       command: ["sleep2.0"]
       args: ["10"]
-----------------------------------------------------------------------------------------------------------
-HPA autoscaler
+
+-----------------------------------------------------  HPA autoscaler -----------------------------------------------------
+
 YAML file for autoscaler--->
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
@@ -329,3 +330,47 @@ status:
 
 To run the yaml file to autoscale --> kubectl apply -f /root/autoscale.yml ------> Declarative
 kubectl autoscale deployment nginx-deployment --max=3 --cpu-percent=80 --> imperative
+
+------------------------------------------------------------  VPA autoscaler ---------------------------------------------
+We have prepared the required YAML files for you to deploy the Vertical Pod Autoscaler (VPA). Simply follow the steps below to apply the necessary configurations:
+
+Step 1: Install VPA Custom Resource Definitions (CRDs)
+These CRDs allow Kubernetes to recognize the custom resources that VPA uses to function properly. To install them, run this command:
+
+kubectl apply -f /root/vpa-crds.yml
+
+Step 2: Install VPA Role-Based Access Control (RBAC)
+RBAC ensures that VPA has the appropriate permissions to operate within your Kubernetes cluster. To install the RBAC settings, run:
+
+kubectl apply -f /root/vpa-rbac.yml
+
+By running these commands, the VPA will be successfully deployed to your cluster, ready to manage and adjust your pod resources dynamically.
+------------------------------------------
+
+Clone the VPA Repository and Set Up the Vertical Pod Autoscaler
+You are required to clone the Kubernetes Autoscaler repository into the /root directory and set up the Vertical Pod Autoscaler (VPA) by running the provided script.
+
+Steps:
+Clone the repository:
+
+First, navigate to the /root directory and clone the repository:
+
+  git clone https://github.com/kubernetes/autoscaler.git
+
+Navigate to the Vertical Pod Autoscaler directory:
+
+After cloning, move into the vertical-pod-autoscaler directory:
+
+   cd autoscaler/vertical-pod-autoscaler
+
+Run the setup script:
+
+Execute the provided script to deploy the Vertical Pod Autoscaler:
+
+   ./hack/vpa-up.sh
+
+By following these steps, the Vertical Pod Autoscaler will be installed and ready to manage pod resources in your Kubernetes cluster.
+
+
+---------------------------------------------------------------------------
+Which of the following are the VPA CRDs that get installed as part of the Vertical Pod Autoscaler setup? --> kubectl get crds | grep verticalpodautoscaler
