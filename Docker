@@ -28,7 +28,8 @@ docker ps --all (lists all containers which docker knows)
 
 docker ps -aq (lists all the containers ids)
 
-
+Solution for exporting a container is to use: docker export --output="export.tar" container_id
+Solution for import is to use: docker import export.tar
 
 docker logs conatinername/ID (logs for troubleshooting applications) tip-- first few characters of the container ID should still show the container
 
