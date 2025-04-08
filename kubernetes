@@ -386,3 +386,14 @@ vpa-recommender            1/1     1            1           3m54s
 vpa-updater                1/1     1            1           3m54s
 
 check logs for vpa updater -------> k -n kube-system logs vpa-updater-pod_name 
+-----------------------------------------------------------------------------------------------
+
+Drain the nodes from a specific node so the pods can be recreated on another node. The node will be cordoned(marked unschedulable). to make them schedulable again, we need to uncordon.
+
+kubectl drain node01
+
+kubectl uncordon node01
+
+kubectl cordon node02 ---> will just mark the node unschedulable but doesn't drain the pods off the node.
+
+
