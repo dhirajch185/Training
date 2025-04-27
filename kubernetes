@@ -444,6 +444,10 @@ systemctl restart kubelet
 
 If you are on the controlplane node, run ----------->> ssh node01 to log in to the node01.
 
+-----------------------------------------------------------------------------------------------------------
+
+
+
 https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-upgrade/
 
 ------------------------------------------------------
