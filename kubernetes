@@ -486,3 +486,28 @@ Since our ETCD database is TLS-Enabled, the following options are mandatory:
 
 For a detailed explanation on how to make use of the etcdctl command line tool and work with the -h flags.
 ----------------------------------------------------------------------------------------------------------
+At what address can you reach the ETCD cluster from the controlplane node?
+
+Check the ETCD Service configuration in the ETCD POD
+
+Use the command kubectl describe pod etcd-controlplane -n kube-system and look for --listen-client-urls
+
+----------------------------use case for etcd backup ----------
+The master node in our cluster is planned for a regular maintenance reboot tonight. While we do not anticipate anything to go wrong, we are required to take the necessary backups. Take a snapshot of the ETCD database using the built-in snapshot functionality.
+
+
+Store the backup file at location /opt/snapshot-pre-boot.db
+
+solution->
+
+
+root@controlplane:~# ETCDCTL_API=3 etcdctl --endpoints=https://[127.0.0.1]:2379 \
+--cacert=/etc/kubernetes/pki/etcd/ca.crt \
+--cert=/etc/kubernetes/pki/etcd/server.crt \
+--key=/etc/kubernetes/pki/etcd/server.key \
+snapshot save /opt/snapshot-pre-boot.db
+
+Snapshot saved at /opt/snapshot-pre-boot.db
+root@controlplane:~# 
+
+----------------------------------------------
