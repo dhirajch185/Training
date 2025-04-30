@@ -550,4 +550,98 @@ If you do change --data-dir to /var/lib/etcd-from-backup in the ETCD YAML file, 
 
 -------------------------------------------------------------------------------------------------------------------------------------------
 
+how many clusters are part of the node?------------------> k get-clusters
+switch to specific cluster context to get details of that cluster --> k config use-context cluster1
+
+
+-------------------------------------
+If you check out the pods running in the kube-system namespace in cluster2, you will notice that there are NO etcd pods running in this cluster!
+
+student-node ~ ➜  kubectl config use-context cluster2
+Switched to context "cluster2".
+
+student-node ~ ➜  kubectl get pods -n kube-system  | grep etcd
+
+student-node ~ ✖
+Also, there is NO static pod configuration for etcd under the static pod path:
+
+student-node ~ ➜  ssh cluster2-controlplane
+Welcome to Ubuntu 23.10 (GNU/Linux 5.4.0-1106-gcp x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+This system has been minimized by removing packages and content that are
+not required on a system that users do not log into.
+
+To restore this content, you can run the 'unminimize' command.
+Last login: Thu Jul 25 19:31:58 2024 from 192.160.244.4
+
+cluster2-controlplane ~ ➜  ls /etc/kubernetes/manifests/ | grep -i etcd
+
+cluster2-controlplane ~ ✖ 
+However, if you inspect the process on the controlplane for cluster2, you will see that that the process for the kube-apiserver is referencing an external etcd datastore:
+
+cluster2-controlplane ~ ✖  ps -ef | grep etcd
+root        2906    2515  0 19:26 ?        00:01:17 kube-apiserver --advertise-address=192.160.244.12 --allow-privileged=true --authorization-mode=Node,RBAC --client-ca-file=/etc/kubernetes/pki/ca.crt --enable-admission-plugins=NodeRestriction --enable-bootstrap-token-auth=true --etcd-cafile=/etc/kubernetes/pki/etcd/ca.pem --etcd-certfile=/etc/kubernetes/pki/etcd/etcd.pem --etcd-keyfile=/etc/kubernetes/pki/etcd/etcd-key.pem --etcd-servers=https://192.160.244.3:2379 --kubelet-client-certificate=/etc/kubernetes/pki/apiserver-kubelet-client.crt --kubelet-client-key=/etc/kubernetes/pki/apiserver-kubelet-client.key --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname --proxy-client-cert-file=/etc/kubernetes/pki/front-proxy-client.crt --proxy-client-key-file=/etc/kubernetes/pki/front-proxy-client.key --requestheader-allowed-names=front-proxy-client --requestheader-client-ca-file=/etc/kubernetes/pki/front-proxy-ca.crt --requestheader-extra-headers-prefix=X-Remote-Extra- --requestheader-group-headers=X-Remote-Group --requestheader-username-headers=X-Remote-User --secure-port=6443 --service-account-issuer=https://kubernetes.default.svc.cluster.local --service-account-key-file=/etc/kubernetes/pki/sa.pub --service-account-signing-key-file=/etc/kubernetes/pki/sa.key --service-cluster-ip-range=10.96.0.0/12 --tls-cert-file=/etc/kubernetes/pki/apiserver.crt --tls-private-key-file=/etc/kubernetes/pki/apiserver.key
+root        9228    8883  0 20:01 pts/0    00:00:00 grep etcd
+You can see the same information by inspecting the kube-apiserver pod (which runs as a static pod in the kube-system namespace):
+
+cluster2-controlplane ~ ➜  kubectl -n kube-system describe pod kube-apiserver-cluster2-controlplane 
+Name:                 kube-apiserver-cluster2-controlplane
+Namespace:            kube-system
+Priority:             2000001000
+Priority Class Name:  system-node-critical
+Node:                 cluster2-controlplane/192.160.244.12
+Start Time:           Thu, 25 Jul 2024 19:26:33 +0000
+Labels:               component=kube-apiserver
+                      tier=control-plane
+Annotations:          kubeadm.kubernetes.io/kube-apiserver.advertise-address.endpoint: 192.160.244.12:6443
+                      kubernetes.io/config.hash: 469506630571d428e4ddc39d3735a142
+                      kubernetes.io/config.mirror: 469506630571d428e4ddc39d3735a142
+                      kubernetes.io/config.seen: 2024-07-25T19:26:32.901498317Z
+                      kubernetes.io/config.source: file
+Status:               Running
+SeccompProfile:       RuntimeDefault
+IP:                   192.160.244.12
+IPs:
+  IP:           192.160.244.12
+Controlled By:  Node/cluster2-controlplane
+Containers:
+  kube-apiserver:
+    Container ID:  containerd://00e16e0d46214d1bdd969738966c660eb41a0f3a03ef0d2e0d8c009642381f82
+    Image:         registry.k8s.io/kube-apiserver:v1.29.0
+    Image ID:      registry.k8s.io/kube-apiserver@sha256:921d9d4cda40bd481283375d39d12b24f51281682ae41f6da47f69cb072643bc
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      kube-apiserver
+      --advertise-address=192.160.244.12
+      --allow-privileged=true
+      --authorization-mode=Node,RBAC
+      --client-ca-file=/etc/kubernetes/pki/ca.crt
+      --enable-admission-plugins=NodeRestriction
+      --enable-bootstrap-token-auth=true
+      --etcd-cafile=/etc/kubernetes/pki/etcd/ca.pem
+      --etcd-certfile=/etc/kubernetes/pki/etcd/etcd.pem
+      --etcd-keyfile=/etc/kubernetes/pki/etcd/etcd-key.pem
+      --etcd-servers=https://192.160.244.3:2379
+--------- End of Snippet---------
+
+
+by ssh into controlplane of cluster2 and grepping for etcd give me details of the running etcd cluster externally on --etcd-servers=https://192.168.114.246:2379 but no local instance at (127.0.0.1 )
+----------------------------------------------------------------------------------------------------------------
+Check the members of the cluster:
+
+etcd-server ~ ➜  ETCDCTL_API=3 etcdctl \
+  --endpoints=https://127.0.0.1:2379 \
+  --cacert=/etc/etcd/pki/ca.pem \
+  --cert=/etc/etcd/pki/etcd.pem \
+  --key=/etc/etcd/pki/etcd-key.pem \
+   member list
+59ee55985632d394, started, etcd-server, https://192.160.244.3:2380, https://192.160.244.3:2379, false
+
+etcd-server ~ ➜  
+This shows that there is only one member in this cluster.
 
