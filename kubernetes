@@ -550,9 +550,12 @@ If you do change --data-dir to /var/lib/etcd-from-backup in the ETCD YAML file, 
 
 -------------------------------------------------------------------------------------------------------------------------------------------
 
-how many clusters are part of the node?------------------> k get-clusters
+how many clusters are part of the node?------------------> k config get-clusters
 switch to specific cluster context to get details of that cluster --> k config use-context cluster1
+list the clusters and their contexts --> k config view
 
+To get the default data directory used the for ETCD datastore used in cluster, connect to etcd using ssh and run --> ps -ef | grep --color=always 'etcd.*--data-dir'
+etcd's ip address or hostname can be found in api server's details ---> k -n kube-system describe pod kube-apiserver-clusterxx-controlplane at--> --etcd-servers= parameter
 
 -------------------------------------
 If you check out the pods running in the kube-system namespace in cluster2, you will notice that there are NO etcd pods running in this cluster!
@@ -632,7 +635,9 @@ Containers:
 
 by ssh into controlplane of cluster2 and grepping for etcd give me details of the running etcd cluster externally on --etcd-servers=https://192.168.114.246:2379 but no local instance at (127.0.0.1 )
 ----------------------------------------------------------------------------------------------------------------
-Check the members of the cluster:
+How many nodes are part of the ETCD cluster that etcd-server is a part of?-------->
+
+Check the members of the cluster: ETCDCTL_API=3 etcdctl member list ----> run this with all the necessary fields as per these instructions https://kubernetes.io/docs/tasks/administer-cluster/configure-upgrade-etcd/#backing-up-an-etcd-cluster
 
 etcd-server ~ ➜  ETCDCTL_API=3 etcdctl \
   --endpoints=https://127.0.0.1:2379 \
