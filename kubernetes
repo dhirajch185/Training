@@ -1,3 +1,17 @@
+K8s Setup Process with kubeadm
+
+1) Provision Systems or Virtual Machines
+2) Designate Cluster Roles - Assign the role of the master to one node while designating the remaining nodes as workers.
+3) Install a Container Runtime - Install a container runtime on each node. like (ContainerD)
+4) Install kubeadm - Deploy the kubeadm tool on every node. kubeadm is critical as it bootstraps the cluster by installing and configuring the necessary components in the correct sequence.
+5) Initialize the Master Node - Use kubeadm to initialize the master node. This step sets up vital components and configures the master server to manage the cluster effectively.
+6) Configure the Pod Network - Before integrating worker nodes into the cluster, verify that the pod network is properly configured. A specialized networking solution is required for reliable communication between the master and worker nodes.
+7) Join Worker Nodes - After the pod network is set up, add worker nodes to the cluster by having them join the master node.
+8) Deploy Applications - Once all nodes are successfully configured and connected, deploy applications within the Kubernetes cluster.
+
+
+-------------------------------------------
+
 kubectl get pods
 kubectl get pods -o wide
 kubectl describe pod <podname>
