@@ -715,3 +715,91 @@ etcd-server ~ ➜  systemctl daemon-reload
 etcd-server ~ ➜  systemctl restart etcd
 etcd-server ~ ➜  
 Step 6 (optional): It is recommended to restart controlplane components (e.g. kube-scheduler, kube-controller-manager, kubelet) to ensure that they don't rely on some stale data.
+-------------------------------------------------------------------------
+Check priority class assigned to system-node-critical use --------> kubectl describe priorityclass system-node-critical
+
+Create a PriorityClass named high-priority, a value of 100000, and a preemption policy of PreemptLowerPriority. Do not set this class as a global default. ---->
+
+To create the class high-priority, create a new yaml file:
+
+vi high-priority.yaml
+Add the contents of the yaml file:
+
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: high-priority
+value: 100000
+globalDefault: false
+description: "This priority class is used for high-priority pods."
+preemptionPolicy: PreemptLowerPriority
+Save the file using :wq. To create the resource:
+
+kubectl apply -f high-priority.yaml
+You should be able to see the new resource if you listed the available priority classes using:
+
+kubectl get priorityclasses
+
+---------------
+Now, create another pod in the default namespace named high-prio-pod that runs an nginx image and uses the high-priority PriorityClass.
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: high-prio-pod
+  name: high-prio-pod
+spec:
+  containers:
+  - image: nginx
+    name: high-prio-pod
+  priorityClassName: high-priority
+
+
+-------------------------
+You can compare the priority classes on both pods using the following command: --> kubectl get pods -o custom-columns="NAME:.metadata.name,PRIORITY:.spec.priorityClassName"
+
+--------------------------
+
+To resolve this situation and get the critical-app to a running state, you should:
+
+Assign the high-priority class to the critical-app
+Delete and recreate the pod with the new priority
+Make sure the pod is in running state after applying the actions.
+
+To update the manifest file of the critical-app pod, save a copy of the manifest file:
+
+kubectl get pod critical-app -o yaml > critical-app.yaml
+Edit the saved copy as follows (Output truncated below):
+
+# critical-app.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  ...
+  name: critical-app
+  ...
+spec:
+  containers:
+  - image: nginx
+    imagePullPolicy: Always
+    name: critical-container
+    ...
+  dnsPolicy: ClusterFirst
+  priorityClassName: high-priority   # Add the high-priority class
+  enableServiceLinks: true
+  preemptionPolicy: PreemptLowerPriority
+  priority: 0  # Remove this line as this is the old default priority
+  ...
+Save the file using :wq! and then delete the old critical-app pod:
+
+kubectl delete pod critical-app
+Apply the new updated manifest file:
+
+kubectl apply -f critical-app.yaml
+Ensure the pod is now in running state:
+
+kubectl get pod critical-app
+
+
+----------------------------------------------
