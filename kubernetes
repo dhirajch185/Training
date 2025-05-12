@@ -1003,3 +1003,14 @@ This node has joined the cluster:
 * The Kubelet was informed of the new secure connection details.
 
 Run 'kubectl get nodes' on the control-plane to see this node join the cluster.
+-----------------------------------------------------
+
+Security of K8s kube api server -> 1) Flat file with user accounts 2) Using Static token file 3) SSL certificates 4) Identity services like LDAP, Kerberos etc
+1--> pwd, username, userid,group(optional. just to assing user to a group) in a csv file need to be up stored and added to --basic-auth=usercredentials.csv in kubeapi-server.service file in ExecStart=.. If its setup with kubeadm tool, modify kubeapi-server pod definition file (yaml file) under command field.
+To authenticate with the user from the list, use the curl command --> curl -v -k https//master-node-ip-address:6443/api/v1/pods -u "username1:Password1" along with the payload.
+2--> Similar to user credentials, we can use tokens in a csv file and add it to kubeapi-server.service file like --token-auth=user-token-details.csv
+For authenticating, use the curl command like ---> curl -v -k https//master-node-ip-address:6443/api/v1/pods --header "Authorization: Bearer KpjCvblaljljadflkjadljj"
+Clearly these two ways of authentication is not a recommended approach as its insecure. Also if using kubeadm, use volume mounts to pass auth file.
+3) 
+
+
