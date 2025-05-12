@@ -1014,3 +1014,12 @@ Clearly these two ways of authentication is not a recommended approach as its in
 3) 
 
 
+Servers in k8s which needs server certificates are 1) kubeapi-server 2) etcd database 3) Kubelet server (to interact with worker nodes, it exposes a https cert and key)
+clients access the services. 1) Admin user (admin.crt, admin.key) to auth to kubeapi server 2) scheduler (scheduler.cert, scheduler.key), a client to kubeapiserver to talk to kubeapi server for scheduling pods. it gets kubeapi to schedule pods on right nodes. 3) kube controller manager (controllermanger.cert, controllermanager.key) talks to kubeapi server as well.
+4) kubeproxy (kubeproxy.cert, kubeproxy.key) authenticates with kubeapiserver.
+Finally CA needs root certificates (CA.cert, CA.key)
+
+--------------------------------------------
+Certificate generation. 
+--> Use openssl to generate certificate--> openssl genrsa -out ca.key 2048
+---> use certificate signing request --> openssl req -new -key ca.key -subj "/CN=KUBERNETES-CA" -out ca.csr  ----> Certificate signing request is like a certificate with all of your details, but with no signature. In the certificate signing request, we specify the name of the component this certificate is for in the common name or CN field. In this case, since we are creating a certificate for the Kubernetes CA, we name it Kubernetes-CA.
