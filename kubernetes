@@ -1022,4 +1022,34 @@ Finally CA needs root certificates (CA.cert, CA.key)
 --------------------------------------------
 Certificate generation. 
 --> Use openssl to generate certificate--> openssl genrsa -out ca.key 2048
----> use certificate signing request --> openssl req -new -key ca.key -subj "/CN=KUBERNETES-CA" -out ca.csr  ----> Certificate signing request is like a certificate with all of your details, but with no signature. In the certificate signing request, we specify the name of the component this certificate is for in the common name or CN field. In this case, since we are creating a certificate for the Kubernetes CA, we name it Kubernetes-CA.
+---> use certificate signing request --> openssl req -new -key ca.key -subj "/CN=KUBERNETES-CA /O=system:masters" -out ca.csr  ----> Certificate signing request is like a certificate with all of your details, but with no signature. In the certificate signing request, we specify the name of the component this certificate is for in the common name or CN field. In this case, since we are creating a certificate for the Kubernetes CA, we name it Kubernetes-CA. In audit log this is the name you see. /O is the parameter used to assign the user under a group system:masters
+--> Now sign the certificate --> openssl x509 -req -in admin.csr -CA ca.crt -CAkey ca.
+
+for client system components like Kube scheduler, the name should be prefixed with SYSTEM: like 'SYSTEM:KUBE-SCHEDULER'. same for 'SYSTEM:KUBE-CONTROLLER-MANAGER'
+Create the rest in similar way.
+
+once certificates are created, use they either by ---> curl https//master-node-ip-address:6443/api/v1/pods --key admin.key --cert admin.crt --cacert ca.crt with payload.
+or --> use kube-config.yaml and specify the parameters (most kube clients use this method)
+
+ca root certificate copy need to be all the components of k8s.
+
+
+for kube api server, all the alias names should be in openssl.cnf file as [alt_names] and then use the open ssl req along with -config openssl.cnf
+all these certificates go under --client-ca for ca.crt, --tls-cert-file for api server. similarly for etcd and kubelet you need similar ca, key and server certificates.
+
+for kubelets, you need them based on the node like node01, node02etc for each node.
+
+-------------------------
+All these certificates, if they are generated manually, they will be at /etc/sytemd/system/kubeapi-serveer.service. if its generated through kubeadm, it will be at /etc/kubernetes/manifests/kube-apiserver.yaml
+
+To decode the certificate run ---> openssl x509 -in /etc/kubernetes/pki/apiserver.crt -text -noout
+
+To inspect logs ----------->> use journalctl -u etccd.service -l if all the setup was done manually.
+if setup with kubeadm use ----> kubectl logs etcd-master
+if kube api server or etcd is down, use docker container, list them first and run the command for logs --> docker ps -a ---> docker logs containerid
+---------------------------
+
+
+
+
+
