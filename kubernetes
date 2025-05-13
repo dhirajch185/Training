@@ -1049,7 +1049,21 @@ if setup with kubeadm use ----> kubectl logs etcd-master
 if kube api server or etcd is down, use docker container, list them first and run the command for logs --> docker ps -a ---> docker logs containerid
 ---------------------------
 
+The kube-api server stopped again! Check it out. Inspect the kube-api server logs and identify the root cause and fix the issue.
+Run crictl ps -a command to identify the kube-api server container. Run crictl logs container-id command to view the logs.
 
+If we inspect the kube-apiserver container on the controlplane, we can see that it is frequently exiting.
 
+root@controlplane:~# crictl ps -a | grep kube-apiserver
+1fb242055cff8       529072250ccc6       About a minute ago   Exited              kube-apiserver            3                   ed2174865a416       kube-apiserver-controlplane
+If we now inspect the logs of this exited container, we would see the following errors:
 
+root@controlplane:~# crictl logs --tail=2 1fb242055cff8  
+W0916 14:19:44.771920       1 clientconn.go:1331] [core] grpc: addrConn.createTransport failed to connect to {127.0.0.1:2379 127.0.0.1 <nil> 0 <nil>}. Err: connection error: desc = "transport: authentication handshake failed: x509: certificate signed by unknown authority". Reconnecting...
+E0916 14:19:48.689303       1 run.go:74] "command failed" err="context deadline exceeded"
+This indicates an issue with the ETCD CA certificate used by the kube-apiserver. Correct it to use the file /etc/kubernetes/pki/etcd/ca.crt.
+
+Once the YAML file has been saved, wait for the kube-apiserver pod to be Ready. This can take a couple of minutes.
+
+---------------------------------------
 
