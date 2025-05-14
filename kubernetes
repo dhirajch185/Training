@@ -1066,4 +1066,45 @@ This indicates an issue with the ETCD CA certificate used by the kube-apiserver.
 Once the YAML file has been saved, wait for the kube-apiserver pod to be Ready. This can take a couple of minutes.
 
 ---------------------------------------
+* Kubernetes has its own API for certificate signing requests
+1) create CertificateSigningRequest object
+2) Review the requests
+3) Approve the requests with kubectl commands
+this certificate can be extracted and sent to user.
+
+----------------------------------------
+1) user generates a key (openssl genrsa -out Djiadmin.key 2048
+2) sends request to the admin ( openssl req -new -key Djiadmin.key -sub "/CN=Dji" -out Djicsr.csr
+3) Admin takes key and creates a cert signing request object using a manifest file. specifically in request field of the yaml file, add the Djicsr.csr file data but not as plain text, add it only after encoding it to base64 format.
+4) admins can see the requests by using  ------>> kubectl get csr
+5) To approve csr request, -----> kubectl certificate approve Dji
+6) to view the approved certificate, -----> kubectl get csr Dji -o yaml
+7) ofcourse the certificate which is in base64 needs to be decoded to plain text using the command----> echo "Ls0Q...rtQ=" | base64 --decode
+8) This can be shared with the end user.
+9) The component which is actully doing these certificate realted operations is ---> Controller manager.CSR APPROVING, CSR SIGNING responsible for these tasks.
+
+------------
+example:
+Create a CertificateSigningRequest object with the name akshay with the contents of the akshay.csr file
+As of kubernetes 1.19, the API to use for CSR is certificates.k8s.io/v1.
+Please note that an additional field called signerName should also be added when creating CSR. For client authentication to the API server we will use the built-in signer kubernetes.io/kube-apiserver-client.
+
+Use this command to generate the base64 encoded format as following: -
+
+cat akshay.csr | base64 -w 0   ( remember -w 0 is used for printing it without line spaces)
+Finally, save the below YAML in a file and create a CSR name akshay as follows: ----->
+
+apiVersion: certificates.k8s.io/v1
+kind: CertificateSigningRequest
+metadata:
+  name: akshay
+spec:
+  groups:
+  - system:authenticated
+  request: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURSBSRVFVRVNULS0tLS0KTUlJQ1ZqQ0NBVDRDQVFBd0VURVBNQTBHQTFVRUF3d0dZV3R6YUdGNU1JSUJJakFOQmdrcWhraUc5dzBCQVFFRgpBQU9DQVE4QU1JSUJDZ0tDQVFFQXBYemJDOVA0MEZBMlRJTk42L0QvN0d1Ujljci9sK3ZEV1NDWHc4TDdjc0ZCCk1TdTgxQ1hGcmkwMDNVSnVpOUY1ckVNL0FYUTkzQVZhSkhncFVHQ0V4MmprUUFvOFhDOVgyandZZXQwZ0F4U1IKUllPZGtwZ0cxSHhFcHVqWjlxQStyelZsa2xpWnFKckxtTHd1dTBiaEVveG9BWjBka21FTURrVlJPN0VHZGVlLwo2MUxZaWpieSt4bGpFTjJOVVVtTDkxRTFXWkx4c0V0VU1lUE40cFlSVXE4Y1dwTkQrWERYanhiMzQva3M1bHlSCnZWdDQreE9LcklDd1llTkZKK0hJNTIwSlhqZ3JRUCthUklFK2ZjdWtDc1pKcTg3WXhMZnFpYjYveUs2aEVzNFEKRzQzbnBGRjY4VXV6a0QrcEUvUVJZb2dJUHBRbXNFVHlTTEFOS1Z4cHJRSURBUUFCb0FBd0RRWUpLb1pJaHZjTgpBUUVMQlFBRGdnRUJBRUtOODBnS3dpT2RWVmdSbExlN2ZCUlRzaEl2ZDhUUlhwMWZCQkJaQ0NhcVpiQm5BOVorCmtZWGJDNFBFaXV2eUxtN2I5QVhRanN6L2wwZDNxbkJpd21LOWhIV3NST0VZbG9CWlhxUmxlaW9UREtFcVljVFUKREFpZnN0NFFDWmJFcnpUWkRDK0F4TnVLS1FjSzJoRFYzVzUvdEdOWFVqYWY5MlJTTGp6VDBKLzF6b1R3dU1JWApya0NiTjhmd2ZZSGdqckxyclBCZTR1RVYzSTNFeHFzZ3lIdDBmSGtsZEFscnI5MlZhbkg3cTBMcEJlK2RsK2hJClpiMWNaNVpWd0hxS3BsK05uc3ZNK2pRZUFpNnVNUnRuV0JFb3RPNGFmQWZaSmlmT3hNa2xXZnR1bENpMHZrMmgKYk1aQksyMW5SR3ZjaDVNeVRQOFY3am1idTFqKzV1b3llc289Ci0tLS0tRU5EIENFUlRJRklDQVRFIFJFUVVFU1QtLS0tLQo=
+  signerName: kubernetes.io/kube-apiserver-client
+  usages:
+  - client auth
+
+---------> kubectl apply -f akshay-csr.yaml
 
