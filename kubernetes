@@ -1107,4 +1107,4 @@ spec:
   - client auth
 
 ---------> kubectl apply -f akshay-csr.yaml
-
+To delete a csr -------> kubectl delete csr agent-smithcsr
