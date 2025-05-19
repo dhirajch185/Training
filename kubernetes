@@ -1108,3 +1108,47 @@ spec:
 
 ---------> kubectl apply -f akshay-csr.yaml
 To delete a csr -------> kubectl delete csr agent-smithcsr
+-------------------------------------------------------------------------------
+To manually authenticate a user use the payload with certificates like--->
+curl https://my-kubernetes-hostname: 6443/api/v1/pods \
+--key admin.key
+--cert admin.crt
+--cacert ca.crt
+
+{
+"kind": "PodList",
+"apiVersion":
+"1",
+"metadata": {
+"selfLink": "/api/v1/pods",
+},
+"items": []
+}
+
+To do this using Kubectl command ----------->
+kubectl get pods
+--server my-kubernetes-hostname: 6443
+--client-key admin.key
+--client-certificate admin.crt
+--certificate-authority ca.crt
+------------------------------------------------
+
+TO do this with Kubeconfig file,
+
+"config" File
+--server my-kubernetes-hostname: 6443
+--client-key admin.key
+--client-certificate admin.crt
+--certificate-authority ca.crt
+
+Then run kubectl command like ---> kubectl get pods
+--kubeconfig config
+
+**** By default K8s looks for config file in this path. So if we save the config file here we dont need to specify the full path in the config command ----------> $Home/.kube/config
+
+-----------------------------------------
+Sections in config file
+        - Clusters  ---> Various K8s clusters we need access to
+        - Users  --> User accounts which you have access to the clusters. Not createing new users, but using existing users.
+        - Contexts --> Context define which users access which cluster.
+
