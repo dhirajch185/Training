@@ -61,3 +61,40 @@ if __name__ == '__main__':
     dockerfile = generate_dockerfile(language)
     print("\nGenerated Dockerfile:\n")
     print(dockerfile)
+
+-------------------------------------------------------------------------------------------------
+
+Gen AI
+
+- Computing power access made AI possible and accessible to most of us.
+What’s the difference between AI, ML and gen AI?
+
+** AI - Building machines or systems that can do tasks what requires humans for it. like learning, problem solving, decision making.
+
+** ML - A subset AI. Its all about using data to train machines to perform specific tasks. AI systems uses Math ( A system of euqtions) to solve these problems in ML models. Based on data we input, we get different output. So data plays a huge role.
+
+** GenAI (Generative AI) - Its a subset of ML. It focuses on creating new content like images, audio, text. It generates someting entirely new. It learns underlying patterns and structures of the data they are trained on. Use what they learned and genreate new content. To learn these patterns well, these need a lot of data.
+
+Machine learning models predict the future based on existing data, much like how humans use experience to make educated guesses. However, while humans might rely on intuition or gut feelings, these models use probability.
+Data can be - Numbers (temperature, date), Text description (description of an item's appearance),Images or sounds. Depending on what you want your ML model to do, some data is relevant and some is irrelevant.
+
+Data Quality depends on --> Accuracy, Size of the dataset, Representative (Data needs to be representative and inclusive, otherwise it can lead to skewed samples and biased outcomes. If a dataset about customer preferences is missing information about a certain demographic, the model might make inaccurate or biased generalizations about that group.), consistency (  Inconsistent data formats or labeling can confuse the model and hinder its ability to learn effectively. Imagine trying to assemble a puzzle where some pieces are labeled with numbers and others with letters—it would be a mess.), Relevance ( The data must be relevant to the task the AI is designed to perform. For example, data about traffic patterns in London is unlikely to be helpful for predicting crop yields in Banglore.
+
+Data Accessibility - The ability of AI systems to effectively utilize this data is directly tied to data accessibility 
+        ** Availability - If the necessary data simply isn't available, the AI model can't be trained. For some problems, the data might exist, but it might be locked behind paywalls or restricted due to privacy concerns.
+        ** Cost - Gathering and cleaning data can be expensive. The cost of acquiring high-quality data can be a significant barrier to AI development, especially for smaller organizations.
+    ** Format - Data needs to be in a format that the AI model can understand and process. Converting data into the appropriate format can be time-consuming and technically challenging.
+
+Types of Data: Structured (organized in tables, mostly from a relational DB) and unstructured (pdf, emails, social media posts, images,audio and video).
+
+Machine learning - 3 primary learning approaches; each with its own data requirements
+                                                ---> supervised - Supervised models rely on labeled data
+                                                    unsupervised - unsupervised models work with unlabeled data
+                                                    reinforcement learning - reinforcement learning learns through interaction and feedback
+Labeled Data - An image dataset for training a cat-detection model would label each picture as either a cat or dog. Similarly, a set of customer reviews might be labeled as positive, negative, or neutral. These labels enable algorithms to learn relationships and make accurate predictions.
+
+Unlabeled Data - A collection of unorganized photos, a stream of audio recordings, or website traffic logs without user categorization. In these cases, algorithms must independently discover patterns and structures within the data, as there are no pre-existing labels to guide the learning process.
+
+Supervised ML Model - 
+
+Unsupervised ML Model - 
