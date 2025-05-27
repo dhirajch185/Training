@@ -107,6 +107,49 @@ Reinforcement learning  --> learning through interaction and feedback. Imagine a
 In reinforcement learning, the algorithm learns to maximize rewards and minimize penalties by interacting with its environment.
 This type of learning is particularly useful in situations where you can't provide explicit instructions or labeled data. For example, you could use reinforcement learning to train a self-driving car to navigate complex traffic situations or to optimize the performance of a robot in a manufacturing plant.
 
+------------->
+Gather data by ingestion --> Pub/Sub handles real-time streaming data processing, regardless of the structure of the data. 
+                            Cloud Storage is well-suited for storing unstructured data.
+                            Cloud SQL and Cloud Spanner are used to manage structured data.
 
+Data preparation -----> Its the process of cleaning and transforming raw data into a usable format for analysis or model training. This involves formatting and labeling data properly. 
+                        Google Cloud offers tools like BigQuery for data analysis and Data Catalog for data governance. These tools help prepare data for ML models. 
+                        With BigQuery, you can filter data, correct its inconsistencies, and handle missing values. 
+                        With Data Catalog, you can find relevant data for your ML projects. This tool provides a centralized repository to easily discover datasets in your organization.
+
+Train your Model -----> The process of creating your ML model using data is called model training. Google Cloud's Vertex AI platform provides a managed environment for training ML models. 
+                        With Vertex AI, you can set parameters and build your model, using prebuilt containers for popular machine learning frameworks, custom training jobs, and tools for model evaluation.
+                        Vertex AI also provides access to powerful computing resources to make the model training process faster.
+
+Deploy & Predict ----> Model deployment is the process of making a trained model available for use. 
+
+                        Vertex AI simplifies this by providing tools to put the model into action for generating predictions. This includes scaling the deployment, which means adjusting the resources allocated to the model to handle varying amounts of usage.
+
+Model Management ----> Model management is the process of managing and maintaining your models over time. Google Cloud offers tools for managing the entire lifecycle of ML models. This includes the following:
+
+                        Versioning: Keep track of different versions of the model.
+                        Performance tracking: Review the model metrics to check the model's performance.
+                        Drift monitoring: Watch for changes in the model's accuracy over time.
+                        Data management: Use Vertex AI Feature Store to manage the data features the model uses.
+                        Storage: Use Vertex AI Model Garden to store and organize the models in one place.
+                        Automate: Use Vertex AI Pipelines to automate your machine learning tasks.
+
+
+------------------------------------------------------
+
+Deep Learning - A powerful subset of machine learning, distinguished by its use of artificial neural networks. These networks enable the processing of highly complex patterns and the generation of sophisticated predictions.
+
+Neural networks can leverage both labeled and unlabeled data, a strategy known as semi-supervised learning. They train on a blend of a small amount of labeled data and a large amount of unlabeled data. That way, they learn foundational concepts and generalize effectively to novel (new, not previously experienced)  examples.
+
+Large language models (LLMs)​​​
+
+One particularly exciting type of foundation model is the LLM. These models are specifically designed to understand and generate human language. 
+
+They can translate languages, write different kinds of creative content, and answer your questions in an informative way, even if they are open ended, challenging, or strange. This is likely the most common foundation model you've encountered, such as in popular generative AI chatbots like Gemini. They also help power many search engines you use today.
+
+Diffusion models
+Diffusion models are another type of foundational model. They excel in generating high-quality images, audio, and even video by iteratively refining noise (or unstructured/random data and patterns) into structured data.
+
+To summarize, deep learning provides the core technology, foundation models are the powerful architectures built on deep learning, and generative AI is the application of these models to create new and original content.
 
 
