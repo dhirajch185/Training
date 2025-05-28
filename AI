@@ -153,3 +153,14 @@ Diffusion models are another type of foundational model. They excel in generatin
 To summarize, deep learning provides the core technology, foundation models are the powerful architectures built on deep learning, and generative AI is the application of these models to create new and original content.
 
 
+--------------------------------------------------------------
+
+Modality -  Modality refers to the type of data the model can process and generate, such as text, images, video, or audio. If your application focuses on a single data type, like generating text-based articles or creating audio files, you'll want to choose a model optimized for that specific modality.
+
+context window - The amount of information a model can consider at one time when generating a response. A larger context window allows the model to "remember" more of the conversation or document, leading to more coherent and relevant outputs, especially for longer texts or complex tasks.  larger context windows often come with increased computational costs. You need to balance the need for context with the practical limitations of your resources.
+
+Security -  Consider the model's security features, including data encryption, access controls, and vulnerability management. Ensure the model complies with relevant security standards and regulations for your industry.
+
+Availability and reliability - Choose a model that is consistently available and performs reliably under load. Consider factors like uptime guarantees, redundancy, and disaster recovery mechanisms.
+
+Cost - 
