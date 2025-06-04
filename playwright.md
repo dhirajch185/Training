@@ -19,4 +19,18 @@ Add this option --> dependencies: ['setup'], to othe projects like chromium and 
 
 Also add clipboard read for chrome option like ---> use: { ...devices['Desktop Chrome'], Permissions: ['clipboard-read'] }
 
+If we want to run the tests in headed mode though the config was setup as headless, just use ---> option cli headed in the terminal example: npx playwright test --headed
+
+other way is to run with project name: npx playwright test --project chromium.
+we can add on to it and cutomize as per our requirement. like --> npx playwright test --project chromium --project firefox
+even we can run it with arguments like using regex --> npx playwright test --project "*omium"
+
+commands to make it even easier when the playwright project grows is --> narrow down runs by running all the tests within a specific file. like --> npx playwright test tests/example.spec.ts
+***--> One more option is to run the test from a specific line like--> npx playwright test tests/example.spec.ts:10
+
+***--> To merge the tests togethe from different sections, we can use tag function like--> in this test('get started link', async ({ page }) => {
+  await page.goto('https://playwright.dev/');--------> Add--> test("get started link", { tag: ["@first"] }, async ({ page }) => {
+  await page.goto("https://playwright.dev/");
+  Then do ---> npx playwright test --grep "@first"
+  
 
