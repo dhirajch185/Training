@@ -28,9 +28,11 @@ even we can run it with arguments like using regex --> npx playwright test --pro
 commands to make it even easier when the playwright project grows is --> narrow down runs by running all the tests within a specific file. like --> npx playwright test tests/example.spec.ts
 ***--> One more option is to run the test from a specific line like--> npx playwright test tests/example.spec.ts:10
 
+
 ***--> To merge the tests togethe from different sections, we can use tag function like--> in this test('get started link', async ({ page }) => {
   await page.goto('https://playwright.dev/');--------> Add--> test("get started link", { tag: ["@first"] }, async ({ page }) => {
   await page.goto("https://playwright.dev/");
   Then do ---> npx playwright test --grep "@first"
-  
+
+  To run all other tests than the tagged ones, just do --> npx playwright test --grep-invert "@first"
 
