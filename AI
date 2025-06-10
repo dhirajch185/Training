@@ -268,3 +268,56 @@ Fairness requires accountability. We need to know who is responsible for the AI'
 
 Legal implications - Beyond considerations like fairness and bias, AI development is increasingly governed by legal frameworks. Key areas include data privacy, non-discrimination, intellectual property, and product liability. 
 
+-----------------------
+
+Think of generative AI as a powerful engine. The infrastructure is its foundation, the models are its core, and the platform connects everything together. Agents act as the drivers, making decisions and taking action, while applications are the vehicles that take us to our destination.
+
+
+5 Layers of Gen AI
+* Infrastructure - This is the foundation where everything else rests providing computing resources needed for GenAI. Like servers, GPU, TPU and software for storing and running AI models and training data.
+* Models - Its the brain of the agent. These are algorithms trained on huge data. They learn patterns and relations in data. This allows to generate new data, translate languages, answer questions etc.  
+* Platform - its between agents and models to provide infra to interact. Provides necessary tools and infra for AI development.Offers API, data management capabilities and model deployment tools. It acts as backbone of the system and more like a bridge.
+* Agents - Software that learns how to best achieve a goal based on inputs and tools available to it. This focus on autonomous action (independently set goals and carry them out within a defined environment). Agents use multiple tools, analyze situations and make informed decisions without constant human inputs. They perfom multi-step taks what a model alone cannot. Like researching a topic, troubleshooting code or accessing a system by chaining actions together. You can have 'customer agents', 'code agents', 'data agents' and more... 
+* GenAI applications - User facting applications. Users interact with and leverage the capabilities of AI. Examples- Gemini app, NotebookLM
+
+
+Agents: Think of agents as the intelligent pieces within a larger gen AI powered application. They bring specific capabilities to the table.
+
+Understanding and responding to natural language - This allows applications to have more intuitive interfaces, like chatbots that can actually understand complex requests.
+Automating complex tasks - Agents can handle multi-step processes within an application, such as gathering information, making decisions based on that information, and taking action.
+Personalization - Agents can learn user preferences and tailor the application experience accordingly.
+
+Example: A personalized learning app - An agent could assess a student's knowledge, recommend relevant learning materials, and even generate personalized exercises. The application would provide the structure for lessons and track progress.
+
+ ***Gen AI agents will mostly fall under two categories: conversational agents or workflow agents.
+
+Conversational agents - Conversational agents are designed to understand what you mean, not just what you say, and respond in a way that makes sense. 
+You provide input: You can type a message or speak to the agent.
+The agent understands: Using powerful AI, it figures out the meaning and intention behind your words.
+The agent calls a tool: Based on your request, the agent might need to gather additional information or perform an action. This could involve searching the web, accessing a database, or interacting with another software application.
+The agent generates a response: It formulates an answer that's relevant to your request and sounds natural.
+The agent delivers the response: You'll see or hear the answer depending on how you interacted with it.
+
+Workflow agents - Workflow agents are designed to streamline your work and make sure things get done efficiently and correctly by automating tasks or going through complex processes.
+Workflow agents are designed to streamline your work and make sure things get done efficiently and correctly by automating tasks or going through complex processes.
+
+
+
+You provide input: You define a task or trigger a process like submitting a form, uploading a file, initiating a scheduled event, or even ordering a product online.
+The agent understands: The agent is the software that automates those steps. It interprets the task's requirements and defines the series of steps needed to complete the task.
+The agent calls a tool: Based on the workflow's definition, the agent executes a series of actions. This could involve data transformation, file transfer, sending notifications, integrating with external systems, or initiating other automated processes using APIs.
+The agent generates a result/output: It compiles the outcome of the executed actions, which might be a report, a data file, a confirmation message, or an updated status within a system.
+The agent delivers the result/output: The agent delivers the output to the designated recipient(s) or system(s), such as via email, a dashboard, a database update, or a file storage location.
+
+Advanced prompt engineering frameworks - The reasoning loop often utilizes advanced prompt engineering frameworks to guide its decision-making process. These frameworks can include:
+
+Simple rule-based calculations
+Complex thought chains
+Machine learning algorithms
+Probabilistic reasoning techniques
+
+Examples of such frameworks include ReAct or chain-of-thought (CoT) prompting.
+
+
+
+
