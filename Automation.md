@@ -16,4 +16,5 @@ test.only("First Playwright test",async ( {page}) => {
 ```
 5) Remember to wait for the page to load completely using the command await ```page.waitForLoadState('networkidle');``` If the network time is less than 500 ms
 6) Alternative way is to use waitFor method to wait for the elements in the list to load ```await page.locator(".card-body b").first().waitFor();```
-7) 
+7) if there are multipe elements matching the classname for the locator, then we cant just use ```.classname```. As an alternative, use ```tagname.classname```
+8) 
