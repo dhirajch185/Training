@@ -13,3 +13,4 @@ export default function () {
 }
 ```
 
+To run the script, run the command ` k6 run ScriptName.js `
