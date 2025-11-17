@@ -14,3 +14,12 @@ export default function () {
 ```
 
 To run the script, run the command ` k6 run ScriptName.js `
+------------------------------------------------------------------------
+To setup number of vuser, create a function export like
+```
+// User options for virtual users and duration
+export const options = {
+   vus: 10, // Number of virtual users
+   duration: '10s', // Duration of the test
+};
+```
