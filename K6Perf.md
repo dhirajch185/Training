@@ -23,3 +23,17 @@ export const options = {
    duration: '10s', // Duration of the test
 };
 ```
+
+-------------------------------------------------------------------------
+To capture response from the web request capture it in a variable like below
+```
+export default function() {
+
+   const respLaunch = http.get("https://quickpizza.grafana.com/test.k6.io/");
+   console.log(respLaunch.status);
+
+}
+```
+-----------------------------------------------------------------------------
+For implementing assertions in the script use a deconstruct called check like this.
+```
