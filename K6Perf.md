@@ -35,5 +35,36 @@ export default function() {
 }
 ```
 -----------------------------------------------------------------------------
-For implementing assertions in the script use a deconstruct called check like this.
+For implementing assertions in the script use a deconstruct called 'check' like this.
 ```
+import {check} from "k6";
+
+export default function() {
+
+   const respLaunch = http.get("https://quickpizza.grafana.com/news.php");
+   console.log(respLaunch.body);
+   
+   check (respLaunch, {
+      'Found --> In the news' : (r) => r.body.includes("In the news")
+   } );
+
+//Here we are referencing response message from RespLaunch variable using another variable 'r' and validating if the text 'In the news' is available in the text using 'check' function.
+
+}
+```
+------------------------------------------------------------------------------------
+
+Similarly, different types of checks can be done on the same response
+```
+   check(respLaunch, {
+      'Status is 200': (r) => r.status === 200,
+      'Body contains In the news': (r) => r.body.includes('In the news'),
+      'Response time is less than 500ms': (r) => r.timings.duration < 500,
+      'Content-Type is text/html': (r) => r.headers['Content-Type'] === 'text/html; charset=utf-8',
+      'Body length is greater than 1000 bytes': (r) => r.body.length > 1000,
+      ' No server errors (5xx)': (r) => r.status < 500,
+      'No client errors (4xx)': (r) => r.status < 400
+
+   })
+```
+
