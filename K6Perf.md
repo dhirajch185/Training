@@ -68,3 +68,22 @@ Similarly, different types of checks can be done on the same response
    })
 ```
 
+---------------------------------------------------------------------------------------
+To Pass or Fail a test based on 95th percentile values or Error rate, use below commands
+
+```
+import http from "k6/http";
+import {check} from "k6";
+import {sleep} from "k6";
+
+export const options = {
+   vus: 1,
+   duration: "10s",
+
+   thresholds: {
+      http_req_failed: ["rate<0.01"], // http errors
+      http_req_duration: ["p(95)<100"] // 95% of requests must complete below 500ms
+   }
+
+};
+```
