@@ -88,3 +88,26 @@ export const options = {
 };
 ```
 
+-----------------------------------------------------------------------------------------
+To configure user load for a peak load test of 1 hour with 5 min ramp up and ramp down of 50 users
+
+```
+import http from "k6/http";
+import {check} from "k6";
+import {sleep} from "k6";
+
+export const options = {
+   stages: [
+      {duration: "5m", target: 50}, // ramp up to 50 users over 5 minutes
+      {duration: "60m", target: 50}, // stay at 50 users for 1 hour
+      {duration: "5m", target: 0} // ramp down to 0 users over 5 minutes
+
+   ],
+
+   thresholds: {
+      http_req_failed: ["rate<0.01"], // http errors
+      http_req_duration: ["p(95)<100"] // 95% of requests must complete below 500ms
+   }
+
+};
+
