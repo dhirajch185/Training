@@ -110,4 +110,52 @@ export const options = {
    }
 
 };
+```
+-------------------------------------------------------------
+Spike testing is to test sudden increase in load
+
+```
+import http from 'k6/http';
+import { sleep } from 'k6';
+
+export const options = {
+    stages: [
+        {
+            duration: '2m',
+            target: 10000
+        },
+        {
+            duration: '1m',
+            target: 0
+        }
+    ]
+}
+
+export default function () {
+    http.get("https://quickpizza.grafana.com/news.php");
+    sleep(1);
+}
+```
+---------------------------------------------------------------------------------------------
+Breakpoint test is to identify breakpoint at high number of users and longer duration. High error rate where application crash/doesnt respond
+
+```
+import http from 'k6/http';
+import { sleep } from 'k6';
+
+export const options = {
+    stages: [
+        {
+            duration: '2h',
+            target: 10000
+        }
+    ]
+}
+
+export default function () {
+    http.get("https://quickpizza.grafana.com/news.php");
+    sleep(1);
+}
+```
+---------------------------------------------------------------------------------------------------
 
