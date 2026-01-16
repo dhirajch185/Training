@@ -29,3 +29,8 @@ IAM is global service
   - Groups can only contain users (like 'Developers group', 'testers group', 'Operations team' etc)
   - Users can belong to multiple groups.
   - they dont need to be in any group either.
+-------------------------------------------------------------------
+IAM Permissions
+ - Users or groups can be assigned json documents called 'IAM Policies'
+ - Policies define permissions of the user.
+ - 
