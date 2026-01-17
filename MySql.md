@@ -59,3 +59,25 @@ Users interact with the database using **SQL Statements**, which always end with
 SELECT * FROM table_name 
 WHERE column_name > 10 
 ORDER BY column_name ASC;
+
+---
+We can use joins to relate data between tables based on overlapping data.
+---
+Best Practices
+- Data normalization - design to min database redudancy and max integrity
+                      - Each row/column pair should have a single value
+                      - These values should be relatable to key values of the table
+---
+MySql Benefits
+  - Its free. ( No official tech support)
+  - Its easy to use
+  - Its opensource
+Disadvantages
+  - with huge databases its less efficient
+  - Some features are not avaialble out of the box
+  - Not fully sql compliant for migration to other DBMS
+---
+Data Types
+  -  Numeric data (numbers for math)- Integer, fixed point(Decimal.scale format eg -999.9),floating point (decimal floats to allow more decimal values)
+  -  String (for Text)
+  -  
