@@ -61,23 +61,66 @@ WHERE column_name > 10
 ORDER BY column_name ASC;
 
 ---
-We can use joins to relate data between tables based on overlapping data.
+# Database Fundamentals & MySQL Overview
+
+We use **Joins** to relate data between tables based on overlapping keys and shared data points.
+
 ---
-Best Practices
-- Data normalization - design to min database redudancy and max integrity
-                      - Each row/column pair should have a single value
-                      - These values should be relatable to key values of the table
+
+## Best Practices: Data Normalization
+Normalization is the process of organizing data to minimize redundancy and maximize integrity.
+* **Atomicity:** Each row/column pair should contain a single, indivisible value.
+* **Consistency:** Values should be directly relatable to the primary key of the table.
+
 ---
-MySql Benefits
-  - Its free. ( No official tech support)
-  - Its easy to use
-  - Its opensource
-Disadvantages
-  - with huge databases its less efficient
-  - Some features are not avaialble out of the box
-  - Not fully sql compliant for migration to other DBMS
+
+## MySQL Overview
+
+### Benefits
+* **Cost-Effective:** It is open-source and free to use.
+* **User-Friendly:** Easy to set up and widely supported.
+* **Open Source:** Highly customizable with a massive community.
+
+### Disadvantages
+* **Scalability:** Efficiency can decrease with extremely large databases.
+* **Out-of-the-box Features:** Some advanced features require manual configuration or plugins.
+* **Compliance:** Not 100% SQL compliant, which can complicate migrations to other DBMS.
+
 ---
-Data Types
-  -  Numeric data (numbers for math)- Integer, fixed point(Decimal.scale format eg -999.9),floating point (decimal floats to allow more decimal values)
-  -  String (for Text)
-  -  
+
+## Data Types
+
+
+
+### 1. Numeric Data
+Used for mathematical operations.
+* **Integer:** Whole numbers without decimals.
+* **Fixed Point (DECIMAL):** Used when high precision is required (e.g., currency). Format: `-999.9`.
+* **Floating Point:** Used when the number of significant figures is unpredictable.
+
+### 2. String & Binary Data
+* **CHAR:** Fixed length (max **255** characters). Storage is consistent regardless of data size because it is padded with spaces (spaces are hidden upon retrieval).
+* **VARCHAR:** Variable length (up to **65,535** characters). Storage size adjusts dynamically based on the input.
+* **BINARY / VARBINARY:** Similar to CHAR/VARCHAR but stores data as **bytes** rather than characters. Data is sorted numerically instead of alphabetically.
+* **BLOB / TEXT:** For large data sets (up to 4GB).
+    * **BLOB:** Stores data as binary (good for images/files).
+    * **TEXT:** Stores data as character strings.
+
+> **Note:** Use **CHAR/VARCHAR** for human-readable text and **BINARY/VARBINARY** for machine-readable data.
+
+### 3. Date & Time
+* **DATE:** Stores values as `YYYY-MM-DD`.
+* **DATETIME:** Stores hours, minutes, seconds, and microseconds (`YYYY-MM-DD hh:mm:ss.fraction`).
+* **TIMESTAMP:** Similar to DATETIME but adjusted to the **timezone**. Ideal for tracking "events" (like login times).
+* **Usage:** Use DATE/DATETIME for static dates (birthdays) and TIMESTAMP for real-time events.
+
+### 4. Special Types
+* **BOOLEAN:** For `True` and `False` values.
+* **SET / ENUM:** Defined during table creation for specific acceptable values.
+    * **ENUM:** Allows only **one** valid value from the list.
+    * **SET:** Allows for **multiple** valid values from the list.
+* **BIT:** For storing binary values.
+* **JSON:** Optimized storage for JSON formatted data.
+* **Spatial Data:** For storing geographical/GIS data and map coordinates.
+
+---
