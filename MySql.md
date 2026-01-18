@@ -59,7 +59,7 @@ Users interact with the database using **SQL Statements**, which always end with
 SELECT * FROM table_name 
 WHERE column_name > 10 
 ORDER BY column_name ASC;
-
+```
 ---
 # Database Fundamentals & MySQL Overview
 
