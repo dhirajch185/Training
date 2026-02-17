@@ -184,7 +184,9 @@ kubectl edit replicaset myapp-replicaset ------------ Risky.. Imperative way to 
 kubectl delete replicaset myapp-replicaset -- Delete replicaset
 kubectl create -f deployment-definition.yaml
 kubectl create deployment --image=nginx nginx
-kubectl create deployment --image=nginx nginx --dry-run=client -o yaml > nginx-deployment.yaml  ---------> Generate Deployment YAML file (-o yaml). Don’t create it(–dry-run)
+kubectl create deployment --image=nginx nginx --dry-run=client -o yaml > nginx-deployment.yaml  
+
+---------> Generate Deployment YAML file (-o yaml). Don’t create it(–dry-run)
 
 kubectl create deployment --replicas=3 --image=httpd:2.4-alpine httpd-frontend --dry-run=client -o yaml > httpd-deployment-definition.yaml  ----> created a file as required
 

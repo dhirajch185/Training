@@ -8,6 +8,10 @@ ctrl+shift+v for pasting it :)
 
 Ctrl+l (clear screen)
 
+touch filename.tf  -> To create a file in the working directory
+
+vi filename.tf to open and 'insert' or 'i' button to edit the file
+
 'i' to insert to vim
 
 Crtl+R and start typing the command you are searching for from your history of commands (To search from the list of commands we already run before)
