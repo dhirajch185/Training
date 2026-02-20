@@ -1,3 +1,15 @@
+To configure your AWS CLI, obtain key from
+IAM > Users> Security Credentials TAB > Access keys > Create Access Key > Command Line Interface > 
+
+
+If you have a private key and would like to generate a public key from it, you can run this command:
+
+ssh-keygen -y -f PrivateKEYPAIR.pem
+
+In aws console, EC2 -> network & Security -> keypairs, select, Actions-> Import keypair and provide the generated publickey to reuse the same private key across accounts in different Availability zones.
+
+-----------------------------------------------------------------------------------
+
 Where to build your servers?
 Compliance - like GDPR
 Proximity - To reduce lag
