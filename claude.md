@@ -4,3 +4,5 @@
 - Claude didn't follow my format - Show, don't just tell. Provide an example of the format, or describe the structure explicitly: "Use bullet points with bold headers for each section."
 - I got confident-sounding information that turned out to be wrong - For high-stakes work, verify key facts independently. Ask Claude to cite sources or indicate confidence level. Enable web search to ground responses in current information.
 - The tone isn't right - Describe the tone in plain language: "Make this more conversational" or "This should sound authoritative and formal." Provide an example of writing in the style you want.
+- Give specific feedback. "Make it shorter" is fine, but "Cut the first two paragraphs and make the conclusion more action-oriented" is better.
+- Know when to start fresh. If a conversation has gone off track, sometimes it's faster to open a new chat with a clearer prompt than to try to redirect.
