@@ -6,15 +6,15 @@ func TestClientRegistrySendOK(t *testing.T) {
 	r := NewClientRegistry()
 	ch := r.Register("abc", &Client{RemoteAddr: "1.2.3.4:1"})
 
-	result := r.Send("abc", "hello")
+	result := r.Send("abc", streamEvent{Type: "custom", Data: "hello"})
 	if result != sendOK {
 		t.Fatalf("expected sendOK, got %v", result)
 	}
 
 	select {
 	case msg := <-ch:
-		if msg != "hello" {
-			t.Fatalf("expected 'hello', got %q", msg)
+		if msg.Data != "hello" {
+			t.Fatalf("expected 'hello', got %q", msg.Data)
 		}
 	default:
 		t.Fatal("expected message on channel, got none")
@@ -24,7 +24,7 @@ func TestClientRegistrySendOK(t *testing.T) {
 func TestClientRegistrySendUnknownClient(t *testing.T) {
 	r := NewClientRegistry()
 
-	result := r.Send("does-not-exist", "hello")
+	result := r.Send("does-not-exist", streamEvent{Type: "custom", Data: "hello"})
 	if result != sendUnknownClient {
 		t.Fatalf("expected sendUnknownClient, got %v", result)
 	}
@@ -34,13 +34,15 @@ func TestClientRegistrySendBusy(t *testing.T) {
 	r := NewClientRegistry()
 	r.Register("abc", &Client{RemoteAddr: "1.2.3.4:1"})
 
-	if result := r.Send("abc", "first"); result != sendOK {
-		t.Fatalf("expected sendOK for first send, got %v", result)
+	for i := 0; i < 4; i++ {
+		if result := r.Send("abc", streamEvent{Type: "custom", Data: "fill"}); result != sendOK {
+			t.Fatalf("expected sendOK filling buffer slot %d, got %v", i, result)
+		}
 	}
 
-	result := r.Send("abc", "second")
+	result := r.Send("abc", streamEvent{Type: "custom", Data: "overflow"})
 	if result != sendBusy {
-		t.Fatalf("expected sendBusy for second send, got %v", result)
+		t.Fatalf("expected sendBusy once buffer is full, got %v", result)
 	}
 }
 
@@ -49,7 +51,7 @@ func TestClientRegistryUnregister(t *testing.T) {
 	r.Register("abc", &Client{RemoteAddr: "1.2.3.4:1"})
 	r.Unregister("abc")
 
-	result := r.Send("abc", "hello")
+	result := r.Send("abc", streamEvent{Type: "custom", Data: "hello"})
 	if result != sendUnknownClient {
 		t.Fatalf("expected sendUnknownClient after unregister, got %v", result)
 	}

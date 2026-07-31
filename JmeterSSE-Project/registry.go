@@ -14,9 +14,14 @@ const (
 	sendBusy
 )
 
+type streamEvent struct {
+	Type string // "custom", "llm-response", "llm-error"
+	Data string
+}
+
 type registeredClient struct {
 	client *Client
-	ch     chan string
+	ch     chan streamEvent
 }
 
 type ClientRegistry struct {
@@ -28,10 +33,10 @@ func NewClientRegistry() *ClientRegistry {
 	return &ClientRegistry{clients: make(map[string]*registeredClient)}
 }
 
-func (r *ClientRegistry) Register(id string, client *Client) chan string {
+func (r *ClientRegistry) Register(id string, client *Client) chan streamEvent {
 	r.mu.Lock()
 	defer r.mu.Unlock()
-	ch := make(chan string, 1)
+	ch := make(chan streamEvent, 4)
 	r.clients[id] = &registeredClient{client: client, ch: ch}
 	return ch
 }
@@ -42,7 +47,7 @@ func (r *ClientRegistry) Unregister(id string) {
 	delete(r.clients, id)
 }
 
-func (r *ClientRegistry) Send(id string, msg string) sendResult {
+func (r *ClientRegistry) Send(id string, ev streamEvent) sendResult {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 	rc, ok := r.clients[id]
@@ -50,7 +55,7 @@ func (r *ClientRegistry) Send(id string, msg string) sendResult {
 		return sendUnknownClient
 	}
 	select {
-	case rc.ch <- msg:
+	case rc.ch <- ev:
 		return sendOK
 	default:
 		return sendBusy

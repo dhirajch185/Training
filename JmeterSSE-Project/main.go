@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"context"
 	"encoding/json"
 	"fmt"
 	"math"
@@ -81,6 +82,7 @@ func NewStatusResponseWriter(writer http.ResponseWriter) *StreamResponseWriter {
 
 type HandlerContext struct {
 	registry *ClientRegistry
+	llm      LLMProvider
 }
 
 func NewHandlerContext() *HandlerContext {
@@ -116,6 +118,8 @@ func (ctx *HandlerContext) StreamHandler(srw *StreamResponseWriter, request *htt
 	lastEventId := request.Header.Get("Last-Event-Id")
 	_, _ = fmt.Sscanf(lastEventId, "message-%d", &client.LastEventId)
 
+	quiet := request.FormValue("quiet") == "1"
+
 	limit := math.MaxInt
 	count := math.MaxInt
 	_, _ = fmt.Sscanf(request.FormValue("count"), "%d", &count)
@@ -138,7 +142,7 @@ func (ctx *HandlerContext) StreamHandler(srw *StreamResponseWriter, request *htt
 	srw.Header().Set("Content-Type", "text/event-stream")
 	srw.Header().Set("Cache-Control", "no-cache")
 	srw.Header().Set("Connection", "keep-alive")
-	if count != math.MaxInt {
+	if !quiet && count != math.MaxInt {
 		srw.Header().Set("X-Expected-Events", strconv.Itoa(count))
 	}
 	srw.WriteHeader(http.StatusOK)
@@ -146,6 +150,19 @@ func (ctx *HandlerContext) StreamHandler(srw *StreamResponseWriter, request *htt
 	err = srw.WriteEvent("hello", fmt.Sprintf("{\n  \"message\": \"Hello, %s!\",\n  \"clientId\": \"%s\"\n}", client.RemoteAddr, clientId))
 	if err != nil {
 		return
+	}
+
+	if quiet {
+		for {
+			select {
+			case ev := <-ch:
+				if err := srw.WriteTypedEvent("", ev.Type, ev.Data); err != nil {
+					return
+				}
+			case <-request.Context().Done():
+				return
+			}
+		}
 	}
 
 	if client.LastEventId >= limit {
@@ -172,8 +189,8 @@ func (ctx *HandlerContext) StreamHandler(srw *StreamResponseWriter, request *htt
 			if client.LastEventId >= limit {
 				return
 			}
-		case msg := <-ch:
-			err := srw.WriteTypedEvent("", "custom", msg)
+		case ev := <-ch:
+			err := srw.WriteTypedEvent("", ev.Type, ev.Data)
 			if err != nil {
 				return
 			}
@@ -230,7 +247,11 @@ func (ctx *HandlerContext) MessageHandler(srw *StreamResponseWriter, request *ht
 		return
 	}
 
-	result := ctx.registry.Send(body.ClientId, body.Message)
+	result := ctx.registry.Send(body.ClientId, streamEvent{Type: "custom", Data: body.Message})
+
+	if result == sendOK && ctx.llm != nil {
+		go ctx.respondWithLLM(body.ClientId, body.Message)
+	}
 
 	srw.Header().Set("Content-Type", "application/json")
 
@@ -248,6 +269,22 @@ func (ctx *HandlerContext) MessageHandler(srw *StreamResponseWriter, request *ht
 	}
 
 	_ = json.NewEncoder(srw).Encode(resp)
+}
+
+func (ctx *HandlerContext) respondWithLLM(clientId string, prompt string) {
+	callCtx, cancel := context.WithTimeout(context.Background(), llmCallTimeout)
+	defer cancel()
+
+	reply, err := ctx.llm.Complete(callCtx, prompt)
+	ev := streamEvent{Type: "llm-response", Data: reply}
+	if err != nil {
+		// err.Error() is sent verbatim to the stream; safe today (keys ride in
+		// headers, never URLs) — revisit if a provider ever embeds secrets in its URL.
+		ev = streamEvent{Type: "llm-error", Data: err.Error()}
+	}
+	if res := ctx.registry.Send(clientId, ev); res != sendOK {
+		fmt.Printf("LLM %s for %s dropped (%v)\n", ev.Type, clientId, res)
+	}
 }
 
 func main() {
@@ -282,7 +319,17 @@ func main() {
 		return AdaptHandler(handler, loggingMiddleware, authMiddleware)
 	}
 
+	llm, err := ProviderFromEnv()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "LLM configuration error: %v\n", err)
+		os.Exit(1)
+	}
 	ctx := NewHandlerContext()
+	ctx.llm = llm
+	if llm != nil {
+		fmt.Printf("LLM responder enabled (%s)\n", os.Getenv("LLM_PROVIDER"))
+	}
+
 	http.Handle("/status", adapt(ctx.StatusHandler))
 	http.Handle("/stream", adapt(ctx.StreamHandler))
 	http.Handle("/message", adapt(ctx.MessageHandler))

@@ -33,8 +33,11 @@ func TestMessageHandlerDelivered(t *testing.T) {
 
 	select {
 	case msg := <-ch:
-		if msg != "hi" {
-			t.Fatalf("expected 'hi', got %q", msg)
+		if msg.Data != "hi" {
+			t.Fatalf("expected 'hi', got %q", msg.Data)
+		}
+		if msg.Type != "custom" {
+			t.Fatalf("expected type 'custom', got %q", msg.Type)
 		}
 	default:
 		t.Fatal("expected message on channel")
@@ -60,23 +63,20 @@ func TestMessageHandlerBusy(t *testing.T) {
 	ctx := NewHandlerContext()
 	ctx.registry.Register("abc", &Client{RemoteAddr: "1.2.3.4:1"})
 
-	body, _ := json.Marshal(messageRequest{ClientId: "abc", Message: "first"})
+	for i := 0; i < 4; i++ {
+		if result := ctx.registry.Send("abc", streamEvent{Type: "custom", Data: "fill"}); result != sendOK {
+			t.Fatalf("expected sendOK filling buffer slot %d, got %v", i, result)
+		}
+	}
+
+	body, _ := json.Marshal(messageRequest{ClientId: "abc", Message: "overflow"})
 	req := httptest.NewRequest(http.MethodPost, "/message", bytes.NewReader(body))
 	rec := httptest.NewRecorder()
 	srw := NewStatusResponseWriter(rec)
 	ctx.MessageHandler(srw, req)
-	if rec.Code != http.StatusOK {
-		t.Fatalf("expected first send to return 200, got %d", rec.Code)
-	}
 
-	body2, _ := json.Marshal(messageRequest{ClientId: "abc", Message: "second"})
-	req2 := httptest.NewRequest(http.MethodPost, "/message", bytes.NewReader(body2))
-	rec2 := httptest.NewRecorder()
-	srw2 := NewStatusResponseWriter(rec2)
-	ctx.MessageHandler(srw2, req2)
-
-	if rec2.Code != http.StatusConflict {
-		t.Fatalf("expected 409, got %d", rec2.Code)
+	if rec.Code != http.StatusConflict {
+		t.Fatalf("expected 409, got %d", rec.Code)
 	}
 }
 

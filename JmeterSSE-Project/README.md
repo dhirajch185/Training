@@ -180,6 +180,42 @@ data:   "random": "fURagzOWqsqPXKzj"
 data: }
 ```
 
+#### `quiet` parameter
+
+The `/stream` endpoint supports a `?quiet=1` parameter that disables the
+automatic `message-N` ticker. When quiet mode is active, the stream will only
+receive the initial `hello` event and then events explicitly injected by
+`/message` requests (both `custom` and LLM-generated `llm-response` or
+`llm-error` events).
+
+```
+GET /stream?quiet=1 HTTP/1.1
+
+HTTP/1.1 200 OK
+Content-Type: text/event-stream
+
+id: hello
+data: {
+data:   "message": "Hello, 192.168.65.1:35326!",
+data:   "clientId": "a1b2c3d4e5f6a7b8"
+data: }
+
+[waits for /message POST]
+
+event: custom
+data: What's the weather?
+
+event: llm-response
+data: mock reply to: What's the weather?
+```
+
+When `?quiet=1` is set:
+- The `count` query parameter has no effect on stream content, but a negative
+  `count` is still rejected with `400 Bad Request` (validation occurs before
+  quiet mode takes effect).
+- The `X-Expected-Events` header is not set.
+- The stream remains open indefinitely until the client disconnects.
+
 ### `POST /message`
 
 The `POST /message` endpoint injects a custom message into one specific,
@@ -205,7 +241,8 @@ Responses:
   registered under that `clientId` (never connected, or already
   disconnected).
 - `409 {"delivered": false, "reason": "busy"}` — the client is connected but
-  its previous custom message hasn't been delivered yet; retry.
+  its event buffer (4 slots) is full; queued events haven't been drained yet.
+  Retry shortly.
 - `400` — malformed request body, or an empty `message` field.
 - `405` — wrong HTTP method (only `POST` and the CORS-preflight `OPTIONS` are
   accepted).
@@ -223,6 +260,77 @@ Note that a custom message posted after a bounded `?count=N` stream has
 already sent its Nth event and closed will not be delivered (the connection
 is gone) — the `POST` may still return `200` in a narrow window before
 server-side cleanup completes.
+
+### LLM responder
+
+When `LLM_PROVIDER` is configured, the server can augment `/message` POST
+requests with automatic LLM-generated responses. After the client-sent message
+is injected as a `custom` event, the server asynchronously queries the
+configured LLM provider and sends the result as either an `llm-response` event
+(success) or `llm-error` event (failure).
+
+#### Environment variables
+
+| Variable | Values | Default | Required |
+|----------|--------|---------|----------|
+| `LLM_PROVIDER` | `mock`, `gemini`, or unset | unset (disabled) | No |
+| `GEMINI_API_KEY` | your API key | — | Yes, if `LLM_PROVIDER=gemini` |
+| `LLM_MODEL` | Gemini model name | `gemini-3.5-flash` | No |
+| `MOCK_DELAY_MS` | milliseconds (≥0) | `500` | No |
+
+When `LLM_PROVIDER` is unset (or omitted), the LLM responder is disabled and
+the server behaves as normal.
+
+#### Example: mock provider
+
+```bash
+export LLM_PROVIDER=mock
+export MOCK_DELAY_MS=1000
+./sse-server
+```
+
+Then in another terminal:
+
+```bash
+curl -X POST http://localhost:8080/message \
+  -H "Content-Type: application/json" \
+  -d '{"clientId": "a1b2c3d4e5f6a7b8", "message": "Hello LLM!"}'
+```
+
+The connected stream will receive:
+
+```
+event: custom
+data: Hello LLM!
+
+event: llm-response
+data: mock reply to: Hello LLM!
+```
+
+#### Gemini free-tier considerations
+
+Use the `mock` provider for load testing. The Gemini API has strict rate
+limits on the free tier; run with only 1-2 concurrent clients to avoid
+`429 Too Many Requests` errors.
+
+#### Stream event flow
+
+```
+POST /message
+  ↓
+[message injected as "custom" event to stream]
+  ↓
+[LLM provider queried asynchronously]
+  ↓
+["llm-response" or "llm-error" event sent to stream]
+```
+
+#### Startup behavior
+
+If `LLM_PROVIDER` is set to an unknown value, or set to `gemini` without
+`GEMINI_API_KEY`, the server will exit at startup with an error message to
+stderr. The server does not start with the LLM feature silently disabled in
+these cases — misconfiguration is fatal.
 
 ## Authentication
 
