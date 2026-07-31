@@ -52,11 +52,13 @@ Date: Thu, 15 Feb 2024 22:15:36 GMT
 
 {
     "192.168.65.1:35299": {
+        "clientId": "a1b2c3d4e5f6a7b8",
         "connectedAt": "2024-02-15T22:15:24.241547551Z",
         "lastEventId": 15,
         "remote": "192.168.65.1:35299"
     },
     "192.168.65.1:35305": {
+        "clientId": "b2c3d4e5f6a7b8a1",
         "connectedAt": "2024-02-15T22:15:34.537873958Z",
         "lastEventId": 5,
         "remote": "192.168.65.1:35305"
@@ -72,7 +74,10 @@ event:
 
 ```
 id: hello
-data: Hello, 192.168.65.1:35326!
+data: {
+data:   "message": "Hello, 192.168.65.1:35326!",
+data:   "clientId": "a1b2c3d4e5f6a7b8"
+data: }
 ```
 
 It is then followed by a never-ending sequence of messages:
@@ -110,8 +115,11 @@ Content-Type: text/event-stream
 Date: Thu, 15 Feb 2024 22:04:16 GMT
 Transfer-Encoding: chunked
 
-id: init
-data: Hello!
+id: hello
+data: {
+data:   "message": "Hello, 192.168.65.1:35299!",
+data:   "clientId": "a1b2c3d4e5f6a7b8"
+data: }
 
 id: message-4
 data: {
@@ -148,7 +156,10 @@ Transfer-Encoding: chunked
 X-Expected-Events: 3
 
 id: hello
-data: Hello, [::1]:63573!
+data: {
+data:   "message": "Hello, [::1]:63573!",
+data:   "clientId": "a1b2c3d4e5f6a7b8"
+data: }
 
 id: message-1
 data: {
@@ -168,6 +179,50 @@ data:   "time": 1708135971,
 data:   "random": "fURagzOWqsqPXKzj"
 data: }
 ```
+
+### `POST /message`
+
+The `POST /message` endpoint injects a custom message into one specific,
+already-open `/stream` connection, identified by the `clientId` returned in
+that connection's `hello` event. The message appears on the target stream
+as a `custom` event, interleaved with the automatic `message-N` events —
+it does not pause or replace them.
+
+Request body:
+
+```json
+{
+  "clientId": "a1b2c3d4e5f6a7b8",
+  "message": "Today is Monday, time is 4 pm"
+}
+```
+
+Responses:
+
+- `200 {"delivered": true}` — message accepted, will appear on the target
+  stream shortly.
+- `404 {"delivered": false, "reason": "unknown_client"}` — no connection is
+  registered under that `clientId` (never connected, or already
+  disconnected).
+- `409 {"delivered": false, "reason": "busy"}` — the client is connected but
+  its previous custom message hasn't been delivered yet; retry.
+- `400` — malformed request body, or an empty `message` field.
+- `405` — wrong HTTP method (only `POST` and the CORS-preflight `OPTIONS` are
+  accepted).
+- `401` — if the `AUTH_TOKEN` (or `AUTH_TOKEN_FILE`) environment variable is
+  set and the request's bearer token is missing or wrong.
+
+On the `/stream` side, the injected message arrives as:
+
+```
+event: custom
+data: Today is Monday, time is 4 pm
+```
+
+Note that a custom message posted after a bounded `?count=N` stream has
+already sent its Nth event and closed will not be delivered (the connection
+is gone) — the `POST` may still return `200` in a narrow window before
+server-side cleanup completes.
 
 ## Authentication
 
