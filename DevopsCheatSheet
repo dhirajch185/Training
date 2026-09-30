@@ -29,7 +29,25 @@ example: docker inspect alpine | less
 to delete entire line, just press "dd" at the beginning of the line.
 
 chmod 777 filename.sh  (To grant execute execute execute permissions for admin, group and user)
+--------------------------------
+To chage permissions in other way to a file use --> dhmod u-x,g+rw,o-w soccer
+Here is the exact breakdown of what each comma-separated section does:
 
+u-x (User/Owner): Removes (-) the execute (x) permission for the owner of the file.
+
+g+rw (Group): Adds (+) both read (r) and write (w) permissions for users assigned to the file's group.
+
+o-w (Others): Removes (-) the write (w) permission for everyone else on the system.
+
+Any permissions not explicitly mentioned in this command (such as the owner's read/write access or the others' read access) remain exactly as they were before you ran it.
+
+-----------------------------
+To completely overwrite existing permissions and set exactly what you want (removing everything else), you use the equals sign (=) instead of plus (+) or minus (-).
+
+The = operator tells Linux: "Set the permissions to exactly this, and wipe out anything that is not listed."
+
+chmod u=,g=rw,o= soccer
+---------------------------------------
 
 sudo poweroff (to shutdown the machine)
 
