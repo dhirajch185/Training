@@ -243,7 +243,7 @@ If a scheduler is missing, to assign a node manually to a pod, use the field 'no
 
 ---------------- scenarios -------------
 kubectl get pods --selector app=App1     -> filters all the pods with the label selector app=App1
- k get pods --selector bu=finance | wc -l  ---> counts the pods along with header
+ k get pods --selector bu=finance | wc -l  ---> counts the pods along with header ( this worked becuase 'alias k="kubernetes"' is set on the terminal)
 k get pod --selector env=prod,bu=finance,tier=frontend  --> multiple filters
 
 kubectl get all --selector env=prod --no-headers | wc -l  ------> count without headers
