@@ -164,7 +164,7 @@ sudo apt-mark hold kubelet kubeadm kubectl
 -------------------------------------------
 
 kubectl get pods
-kubectl get pods -o wide
+kubectl get pods -o wide   -------- find node details for pods quickly instead of describe command.
 kubectl describe pod <podname>
 kubectl create -f <podcreation.yaml filename> ---------- Delcarative Way
 kubectl run mynginx_podname --image=nginx_dockerHubImageName ---- imperative way
