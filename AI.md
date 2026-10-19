@@ -1,3 +1,26 @@
+AI Capabilities & Limitations Framework
+Four properties that shape what AI can and can't do for you. Each sits on a spectrum — the further right, the more you should verify and compensate.
+
+Capability                     --------     Limitation
+
+Next Token Prediction
+Where do AI answers come from?
+Well-worn paths: summarize, reformat, explain common concepts           ---------- Novel territory, sparse patterns, "true vs. sounds true"
+
+Knowledge
+What does AI actually know?
+Frequent, recent-in-training, consistent: mainstream topics, popular languages ---------------- Rare, post-cutoff, niche, local, or contested topics
+
+Working Memory
+What is the AI paying attention to right now?
+Material fits comfortably, session is current, you supply relevant context   -------------------- Very long docs/conversations, expecting cross-session continuity (the cliff)
+
+Steerability
+How much am I in control?
+Short, concrete, verifiable instructions ("respond as a table," "under 100 words") ----------------  Long reasoning chains, abstract asks, native precision
+
+------------------------------------------------
+
 Local llm
 
 Step1 : install python 3 and ollama service on the machine.
